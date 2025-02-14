@@ -1,0 +1,22 @@
+spring.application.name=backend-event
+
+spring.datasource.url=
+spring.datasource.username=
+# Configuren su propio usuario y contrasena
+spring.datasource.password=
+spring.jpa.properties.hibernate.dialect=
+# Propiedades
+spring.jpa.generate-ddl=
+# Crear la estructura de entidades
+spring.jpa.hibernate.ddl-auto=
+# Ver querys
+spring.jpa.show-sql=
+# Loggers
+logging.level.root=
+logging.file.name=
+
+jwt_secret=qprSyNE5hW8oAUNXpKBD5SzLiXvv49Tcv9qb+0/i0GYuLlPTRJnOPDeP598N5ilrBxPIMZGB4JH1YjnH17aXTA==
+jwt_expiration=
+
+server.port=
+
