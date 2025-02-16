@@ -40,3 +40,6 @@ out/
 servicio_test.*
 ### ENV ###
 src/main/resources/application.properties
+
+### SCRIPTS ###
+*.py
