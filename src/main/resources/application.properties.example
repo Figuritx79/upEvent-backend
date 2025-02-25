@@ -20,3 +20,10 @@ jwt_expiration=
 
 server.port=
 
+#CLOUDINARY
+API_SECRET_CLOUDINARY=
+API_KEY_CLOUDINARY=
+
+#RESEND
+API_KEY_RESEND=
+
