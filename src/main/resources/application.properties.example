@@ -18,7 +18,7 @@ logging.file.name=
 jwt_secret=qprSyNE5hW8oAUNXpKBD5SzLiXvv49Tcv9qb+0/i0GYuLlPTRJnOPDeP598N5ilrBxPIMZGB4JH1YjnH17aXTA==
 jwt_expiration=
 
-server.port=
+
 
 #CLOUDINARY
 API_SECRET_CLOUDINARY=
@@ -27,3 +27,7 @@ API_KEY_CLOUDINARY=
 #RESEND
 API_KEY_RESEND=
 
+# Global
+server.port=
+# Aca iria /api
+server.servlet.context-path=
