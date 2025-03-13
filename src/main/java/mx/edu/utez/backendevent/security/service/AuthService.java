@@ -15,17 +15,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.resend.services.emails.model.Email;
+
 import jakarta.servlet.http.Cookie;
 import mx.edu.utez.backendevent.security.SecurityConfig;
 import mx.edu.utez.backendevent.security.UserDetailsServiceImpl;
 import mx.edu.utez.backendevent.security.dto.AuthRequest;
+import mx.edu.utez.backendevent.security.dto.RecoveryPasswordRequest;
+import mx.edu.utez.backendevent.security.dto.ResetPasswordRequest;
 import mx.edu.utez.backendevent.security.util.JwtUtil;
 import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.user.model.UserRepository;
+import mx.edu.utez.backendevent.util.EmailSender;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 
 @Service
@@ -38,6 +44,8 @@ public class AuthService {
 
 	private final JwtUtil jwtUtil;
 
+	private EmailSender emailSender;
+
 	private BCryptPasswordEncoder encoder;
 
 	private Logger log = LoggerFactory.getLogger(AuthService.class);
@@ -46,11 +54,12 @@ public class AuthService {
 
 	@Autowired
 	public AuthService(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
-			JwtUtil jwtUtil, BCryptPasswordEncoder encoder, UserRepository repository) {
+			JwtUtil jwtUtil, BCryptPasswordEncoder encoder, UserRepository repository, EmailSender emailSender) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtUtil = jwtUtil;
 		this.encoder = encoder;
+		this.emailSender = emailSender;
 		this.repository = repository;
 	}
 
@@ -66,7 +75,7 @@ public class AuthService {
 		}
 		var jwt = jwtUtil.generateToken(userDetailsService.loadUserByUsername(authRequest.getEmail()));
 
-		User user = repository.getUserByEmail(authRequest.getEmail())
+		User user = repository.findByEmail(authRequest.getEmail())
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
 		var headers = new HttpHeaders();
@@ -85,9 +94,28 @@ public class AuthService {
 		var response = new ResponseObject("Autenticado", mapResponse, TypeResponse.SUCCESS);
 
 		headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
+		headers.add("Authorization", "Bearer " + jwt);
 		return ResponseEntity.ok().headers(headers).body(response);
 
 	}
+
+	public ResponseEntity<ResponseObject> recoveryPassword(RecoveryPasswordRequest passwordRequest) {
+		var existUser = repository.findByEmail(passwordRequest.getEmail());
+
+		if (!existUser.isPresent()) {
+			return new ResponseEntity<>(new ResponseObject("No existe el usuario", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		// fALTA HTML
+		emailSender.SendMail(existUser.get().getEmail(), "Restablecer Contraseña", null);
+
+		return new ResponseEntity<>(new ResponseObject("Se ha envidado el correo", TypeResponse.SUCCESS),
+				HttpStatus.OK);
+	}
+
+	// public ResponseEntity<ResponseObject> resetPassword(ResetPasswordRequest
+	// reset){
+
+	// }
 
 }

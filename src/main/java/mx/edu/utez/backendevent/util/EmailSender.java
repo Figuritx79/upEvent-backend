@@ -13,27 +13,28 @@ import com.resend.services.emails.model.CreateEmailResponse;
 @Component
 public class EmailSender {
 
-    @Value("${API_KEY_RESEND}")
-    private String apiKey;
+	@Value("${API_KEY_RESEND}")
+	private String apiKey;
 
-    private Logger logger = LoggerFactory.getLogger(EmailSender.class);
+	private Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
-    public void SendMail(String from, String to, String subject, String html) {
-        Resend resend = new Resend(apiKey);
+	public void SendMail(/* String from, */ String to, String subject, String html) {
 
-        CreateEmailOptions param = CreateEmailOptions.builder()
-                .from(from)
-                .to(to)
-                .subject(subject)
-                .html(html)
-                .build();
+		Resend resend = new Resend(apiKey);
 
-        try {
-            CreateEmailResponse data = resend.emails().send(param);
-            logger.info(data.getId());
-        } catch (ResendException e) {
-            e.printStackTrace();
-            logger.info("Error to send the email ");
-        }
-    }
+		CreateEmailOptions param = CreateEmailOptions.builder()
+				// .from(from)
+				.to(to)
+				.subject(subject)
+				.html(html)
+				.build();
+
+		try {
+			CreateEmailResponse data = resend.emails().send(param);
+			logger.info(data.getId());
+		} catch (ResendException e) {
+			e.printStackTrace();
+			logger.info("Error to send the email ");
+		}
+	}
 }

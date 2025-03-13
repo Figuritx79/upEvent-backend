@@ -24,15 +24,20 @@ import mx.edu.utez.backendevent.user.model.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Gender {
-   
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
-    @Column(name = "name", unique = true, columnDefinition = "VARCHAR(40)")
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+
+	@Column(name = "name", unique = true, columnDefinition = "VARCHAR(40)")
+	private String name;
 
 	@OneToMany(mappedBy = "gender")
 	@JsonIgnore
 	private List<User> user;
+
+	public Gender(String name) {
+		this.name = name;
+	}
+
 }

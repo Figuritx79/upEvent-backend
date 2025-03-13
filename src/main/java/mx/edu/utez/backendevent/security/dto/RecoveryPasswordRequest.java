@@ -10,24 +10,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class AuthRequest {
+public class RecoveryPasswordRequest {
 
-	@NotBlank(groups = { Login.class }, message = "Email is mandatory")
-	@NotNull(groups = { Login.class }, message = "Email cant be null")
-	@Email(groups = { Login.class }, message = "Email error format")
+	@Email(groups = RecoveryPassword.class, message = "The format is invalid")
+	@NotNull(groups = RecoveryPassword.class, message = "Email null")
+	@NotBlank(groups = RecoveryPassword.class, message = "Email blank")
 	@Size(max = 50)
 	private String email;
 
-	@NotBlank(groups = { Login.class }, message = "Password is mandatory")
-	@NotNull(groups = { Login.class }, message = "Password cant be Null")
-	@Size(max = 100)
-	private String password;
-
-	private interface Login {
+	private interface RecoveryPassword {
 
 	}
 }

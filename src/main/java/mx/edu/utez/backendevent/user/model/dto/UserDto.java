@@ -1,4 +1,4 @@
-package mx.edu.utez.backendevent.user.model;
+package mx.edu.utez.backendevent.user.model.dto;
 
 import java.util.UUID;
 

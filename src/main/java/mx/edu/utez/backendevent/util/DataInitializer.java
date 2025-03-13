@@ -6,6 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import mx.edu.utez.backendevent.gender.model.Gender;
+import mx.edu.utez.backendevent.gender.model.GenderRepository;
+import mx.edu.utez.backendevent.gender.service.GenderService;
 import mx.edu.utez.backendevent.role.model.Role;
 import mx.edu.utez.backendevent.role.model.RoleRepository;
 import mx.edu.utez.backendevent.user.model.User;
@@ -14,7 +17,8 @@ import mx.edu.utez.backendevent.user.model.UserRepository;
 @Configuration
 public class DataInitializer {
 	@Bean
-	CommandLineRunner initDataBase(RoleRepository roleRepository, UserRepository userRepository) {
+	CommandLineRunner initDataBase(RoleRepository roleRepository, UserRepository userRepository,
+			GenderRepository genderRepository) {
 		return args -> {
 			Optional<Role> optionalRole = roleRepository.findRoleByName("SUPER_ADMIN");
 			if (!optionalRole.isPresent()) {
@@ -38,6 +42,19 @@ public class DataInitializer {
 			if (!optionalRole4.isPresent()) {
 				Role role = new Role("CHECADOR");
 				roleRepository.saveAndFlush(role);
+
+			}
+
+			Optional<Gender> men = genderRepository.findByName("Hombre");
+			if (!men.isPresent()) {
+				Gender menInsert = new Gender("Hombre");
+				genderRepository.saveAndFlush(menInsert);
+
+			}
+			Optional<Gender> woman = genderRepository.findByName("Mujer");
+			if (!woman.isPresent()) {
+				Gender womanInsert = new Gender("Mujer");
+				genderRepository.saveAndFlush(womanInsert);
 
 			}
 			// Optional<User> userTest =

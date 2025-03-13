@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.backendevent.gender.model.Gender;
 import mx.edu.utez.backendevent.occupation.model.Occupation;
-import mx.edu.utez.backendevent.user.model.UserDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
