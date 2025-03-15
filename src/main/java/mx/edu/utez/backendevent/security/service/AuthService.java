@@ -1,7 +1,7 @@
 package mx.edu.utez.backendevent.security.service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +11,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.resend.services.emails.model.Email;
-
 import jakarta.servlet.http.Cookie;
-import mx.edu.utez.backendevent.security.SecurityConfig;
 import mx.edu.utez.backendevent.security.UserDetailsServiceImpl;
 import mx.edu.utez.backendevent.security.dto.AuthRequest;
 import mx.edu.utez.backendevent.security.dto.RecoveryPasswordRequest;
-import mx.edu.utez.backendevent.security.dto.ResetPasswordRequest;
 import mx.edu.utez.backendevent.security.util.JwtUtil;
 import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.user.model.UserRepository;
@@ -63,6 +58,7 @@ public class AuthService {
 		this.repository = repository;
 	}
 
+	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> login(AuthRequest authRequest) {
 		try {
 			authenticationManager.authenticate(
@@ -77,7 +73,11 @@ public class AuthService {
 
 		User user = repository.findByEmail(authRequest.getEmail())
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
+		if (!encoder.matches(authRequest.getPassword(), user.getPassword())) {
+			log.warn("El usuario" + user.getEmail() + "ingreso con la contra equivocada");
+			return new ResponseEntity<>(new ResponseObject("Fallo al autenticar", TypeResponse.ERROR),
+					HttpStatus.UNAUTHORIZED);
+		}
 		var headers = new HttpHeaders();
 		var mapResponse = new HashMap<String, String>();
 
@@ -90,9 +90,8 @@ public class AuthService {
 				.build();
 
 		mapResponse.put("role", user.getRole().getName());
-
+		log.info("Inicio de sesion exitoso" + user.getEmail());
 		var response = new ResponseObject("Autenticado", mapResponse, TypeResponse.SUCCESS);
-
 		headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
 		headers.add("Authorization", "Bearer " + jwt);
 		return ResponseEntity.ok().headers(headers).body(response);

@@ -10,10 +10,15 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping()
 public class TestController {
 	@GetMapping("/up")
 	public ResponseEntity<ResponseObject> up() {
 		return new ResponseEntity<>(new ResponseObject("Up", TypeResponse.SUCCESS), HttpStatus.OK);
+	}
+
+	@GetMapping("/level")
+	public String level(){
+		return "Hello";
 	}
 }

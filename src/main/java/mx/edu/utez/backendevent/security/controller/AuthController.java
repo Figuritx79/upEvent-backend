@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 	private AuthService service;
 
@@ -23,7 +23,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<ResponseObject> log(@RequestBody AuthRequest authRequest) {
+	public ResponseEntity<ResponseObject> login(@RequestBody AuthRequest authRequest) {
 		return service.login(authRequest);
 	}
 

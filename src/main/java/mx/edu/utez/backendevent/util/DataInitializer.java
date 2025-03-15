@@ -1,14 +1,16 @@
 package mx.edu.utez.backendevent.util;
 
+import java.sql.Date;
 import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import mx.edu.utez.backendevent.gender.model.Gender;
 import mx.edu.utez.backendevent.gender.model.GenderRepository;
-import mx.edu.utez.backendevent.gender.service.GenderService;
+import mx.edu.utez.backendevent.passwordResetToken.model.PasswordResetToken;
 import mx.edu.utez.backendevent.role.model.Role;
 import mx.edu.utez.backendevent.role.model.RoleRepository;
 import mx.edu.utez.backendevent.user.model.User;
@@ -16,6 +18,13 @@ import mx.edu.utez.backendevent.user.model.UserRepository;
 
 @Configuration
 public class DataInitializer {
+
+	private final PasswordEncoder passwordEncoder;
+
+	DataInitializer(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	@Bean
 	CommandLineRunner initDataBase(RoleRepository roleRepository, UserRepository userRepository,
 			GenderRepository genderRepository) {
@@ -56,6 +65,19 @@ public class DataInitializer {
 				Gender womanInsert = new Gender("Mujer");
 				genderRepository.saveAndFlush(womanInsert);
 
+			}
+
+			Optional<User> admin = userRepository.findByEmail("20233tn059@utez.edu.mx");
+			if (!admin.isPresent()) {
+				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+				var password = encoder.encode("123456789");
+				var menGender = new Gender(1);
+				var adminRole = new Role(1);
+				Date date = new Date(20050520);
+				User adminInsert = new User("Juan", "Gonzalez", date, "20233tn059@utez.edu.mx", password,
+						menGender, adminRole);
+				userRepository.saveAndFlush(adminInsert);
+				PasswordResetToken passwordResetToken = new PasswordResetToken();
 			}
 			// Optional<User> userTest =
 			// userRepository.getUserByEmail("gonherenrique@gmail.com");

@@ -1,6 +1,8 @@
 package mx.edu.utez.backendevent.security;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -23,8 +25,6 @@ import mx.edu.utez.backendevent.security.util.JwtUtil;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-	private final static Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
-
 	private final UserDetailsServiceImpl userDetailsServiceImpl;
 
 	private final JwtUtil jwtUtil;
@@ -34,6 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		this.userDetailsServiceImpl = userDetailsServiceImpl;
 		this.jwtUtil = jwtUtil;
 	}
+
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

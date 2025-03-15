@@ -11,7 +11,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("/api/gender")
+@RequestMapping("/gender")
 public class GenderController {
 
 	private GenderService genderService;

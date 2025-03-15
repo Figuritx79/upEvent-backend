@@ -33,11 +33,12 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/api/auth/login", "/api/register", "/api/up").permitAll()
 						.requestMatchers("/api/nose").hasAuthority("SUPER_ADMIN")
 						.requestMatchers("/api/hola").hasAuthority("ADMIN_EVENTO")
 						.requestMatchers("/api/pedro").hasAnyAuthority("NORMAL")
 						.requestMatchers("/api/megu").hasAnyAuthority("CHECADOR")
+						.requestMatchers("/api/auth/login", "/api/auth/register", "/api/user/users", "/up", "/level")
+						.permitAll()
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(exceptions -> exceptions

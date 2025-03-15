@@ -40,4 +40,8 @@ public class Gender {
 		this.name = name;
 	}
 
+	public Gender(long id) {
+		this.id = id;
+	}
+
 }

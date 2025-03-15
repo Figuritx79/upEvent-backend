@@ -11,7 +11,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 	private UserService service;
 
