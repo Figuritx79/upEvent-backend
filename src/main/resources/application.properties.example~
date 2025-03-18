@@ -1,0 +1,32 @@
+spring.application.name=backend-event
+
+# Configuración de la base de datos
+spring.datasource.url=jdbc:mysql://localhost:3306/backendevent?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# Configuración de Hibernate y JPA
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Loggers
+logging.level.root=INFO
+logging.file.name=app.log
+
+# JWT
+jwt_secret=qprSyNE5hW8oAUNXpKBD5SzLiXvv49Tcv9qb+0/i0GYuLlPTRJnOPDeP598N5ilrBxPIMZGB4JH1YjnH17aXTA==
+jwt_expiration=86400000  # 24 horas en milisegundos
+
+# Cloudinary
+API_SECRET_CLOUDINARY=tu_api_secret_cloudinary
+API_KEY_CLOUDINARY=tu_api_key_cloudinary
+
+# Resend
+API_KEY_RESEND=tu_api_key_resend
+
+# Configuración del servidor
+server.port=9090
+server.servlet.context-path=/api
