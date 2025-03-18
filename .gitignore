@@ -38,6 +38,7 @@ out/
 
 ### LOGS ###
 servicio_test.*
+*.log
 ### ENV ###
 src/main/resources/application.properties
 
