@@ -39,11 +39,6 @@ public class UserDto {
 	@Email(groups = { Update.class, Insert.class }, message = "Invalid email pattern")
 	private String email;
 
-	@NotBlank(groups = { Update.class, Insert.class }, message = "The name ismandatory")
-	@NotNull(groups = { Update.class, Insert.class }, message = "The name cant bynull")
-	@NotEmpty(groups = { Update.class, Insert.class }, message = "The name ismandatory")
-	private String password;
-
 	private Role role;
 
 	private interface Insert {

@@ -98,23 +98,4 @@ public class AuthService {
 
 	}
 
-	public ResponseEntity<ResponseObject> recoveryPassword(RecoveryPasswordRequest passwordRequest) {
-		var existUser = repository.findByEmail(passwordRequest.getEmail());
-
-		if (!existUser.isPresent()) {
-			return new ResponseEntity<>(new ResponseObject("No existe el usuario", TypeResponse.WARN),
-					HttpStatus.NOT_FOUND);
-		}
-		// fALTA HTML
-		emailSender.SendMail(existUser.get().getEmail(), "Restablecer Contraseña", null);
-
-		return new ResponseEntity<>(new ResponseObject("Se ha envidado el correo", TypeResponse.SUCCESS),
-				HttpStatus.OK);
-	}
-
-	// public ResponseEntity<ResponseObject> resetPassword(ResetPasswordRequest
-	// reset){
-
-	// }
-
 }

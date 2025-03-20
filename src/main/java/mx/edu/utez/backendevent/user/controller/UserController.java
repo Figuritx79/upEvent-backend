@@ -22,7 +22,22 @@ public class UserController {
 
 	@GetMapping("/users")
 	public ResponseEntity<ResponseObject> getAllUser() {
-		return service.getAllUser();
+		return service.findAll();
+	}
+
+	@GetMapping("/event-admins")
+	public ResponseEntity<ResponseObject> findEventAdmin() {
+		return service.findAdminEvent();
+	}
+
+	@GetMapping("/normal-users")
+	public ResponseEntity<ResponseObject> findNormalUser() {
+		return service.findNormalUser();
+	}
+
+	@GetMapping("/checkers")
+	public ResponseEntity<ResponseObject> findCheckerResponse() {
+		return service.findChecker();
 	}
 
 }

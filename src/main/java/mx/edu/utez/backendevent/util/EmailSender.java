@@ -23,7 +23,7 @@ public class EmailSender {
 		Resend resend = new Resend(apiKey);
 
 		CreateEmailOptions param = CreateEmailOptions.builder()
-				// .from(from)
+				.from("noreply@manosmexicanas.website")
 				.to(to)
 				.subject(subject)
 				.html(html)
@@ -37,4 +37,5 @@ public class EmailSender {
 			logger.info("Error to send the email ");
 		}
 	}
+
 }

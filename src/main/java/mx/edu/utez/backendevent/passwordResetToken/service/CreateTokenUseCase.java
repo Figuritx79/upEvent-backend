@@ -27,7 +27,7 @@ public class CreateTokenUseCase {
 	}
 
 	@Transactional(rollbackFor = { SQLException.class })
-	public void createRecoveryToken(UUID id) {
+	public String createRecoveryToken(UUID id) {
 		var token = jwt.generateToken(id);
 
 		User user = new User();
@@ -36,6 +36,7 @@ public class CreateTokenUseCase {
 
 		repository.saveAndFlush(passwordResetToken);
 		log.info("Recovery token is created");
+		return token;
 	}
 
 }
