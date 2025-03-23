@@ -5,19 +5,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
+import mx.edu.utez.backendevent.user.model.dto.CreateEventAdminDto;
+import mx.edu.utez.backendevent.user.service.CreateAdminEvent;
 import mx.edu.utez.backendevent.user.service.UserService;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 	private UserService service;
+	private CreateAdminEvent createAdminEvent;
 
 	@Autowired
-	public UserController(UserService service) {
+	public UserController(UserService service, CreateAdminEvent createAdminEvent) {
 		this.service = service;
+		this.createAdminEvent = createAdminEvent;
 	}
 
 	@GetMapping("/users")
@@ -38,6 +46,12 @@ public class UserController {
 	@GetMapping("/checkers")
 	public ResponseEntity<ResponseObject> findCheckerResponse() {
 		return service.findChecker();
+	}
+
+	@PostMapping("/register-admin-event")
+	@PermitAll
+	public ResponseEntity<ResponseObject> registerAdminEvent(@Valid @RequestBody CreateEventAdminDto adminDto) {
+		return createAdminEvent.registerAdmin(adminDto);
 	}
 
 }

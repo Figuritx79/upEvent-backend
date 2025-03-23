@@ -128,7 +128,7 @@ public class RecoveryPasswordUseCase {
 		}
 
 		var token = createTokenUseCase.createRecoveryToken(existUser.get().getId());
-		var urlToken = "http://localhost:5173/recovery-password?token=" + token;
+		var urlToken = "http://localhost:5173/reset-password?context=" + token;
 		var htmlFormat = String.format(this.html, urlToken);
 
 		emailSender.SendMail(existUser.get().getEmail(), "Restablecer Contraseña", htmlFormat);

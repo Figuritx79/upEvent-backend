@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 public class SecurityConfig {
@@ -33,14 +34,30 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/api/nose").hasAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/hola").hasAuthority("ADMIN_EVENTO")
-						.requestMatchers("/api/pedro").hasAnyAuthority("NORMAL")
-						.requestMatchers("/api/megu").hasAnyAuthority("CHECADOR")
-						.requestMatchers("/api/auth/login", "/api/auth/register", "/api/user/users", "/up", "/level")
+						.requestMatchers("/auth/login", "/up", "/level", "/user/register-admin-event",
+								"/auth/recovery-password")
 						.permitAll()
+						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
+						.hasAnyAuthority("SUPER_ADMIN")
+						.requestMatchers("/api/category/save", "/api/category/update",
+								"/api/course/active", "/api/course/update", "/api/course/status")
+						.hasRole("ADMIN_EVENTO")
+						.requestMatchers("/api/sata")
+						.hasRole("NORMAL")
+						.requestMatchers("/api/animal")
+						.hasRole("CHECADOR")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.cors(
+						cors -> cors
+								.configurationSource(request -> {
+									CorsConfiguration config = new CorsConfiguration();
+									config.setAllowCredentials(true);
+									config.addAllowedOrigin("http://localhost:5173");
+									config.addAllowedHeader("*");
+									config.addAllowedMethod("*");
+									return config;
+								}))
 				.exceptionHandling(exceptions -> exceptions
 						.authenticationEntryPoint((request, response, ex) -> {
 							log.warn("Errorr de autenticacion" + ex.getMessage() + " " + ex.getLocalizedMessage());
@@ -52,6 +69,7 @@ public class SecurityConfig {
 							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 							response.getWriter().write("Acceso denegado: " + ex.getMessage());
 						}))
+
 				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

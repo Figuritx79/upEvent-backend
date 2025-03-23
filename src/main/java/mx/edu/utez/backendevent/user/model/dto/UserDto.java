@@ -21,43 +21,43 @@ public class UserDto {
 	@NotBlank(groups = { Update.class, Delete.class,
 			VerifyCode.class }, message = "The id to update,delete,etc is mandatory")
 	@NotNull(groups = { Update.class, Delete.class, VerifyCode.class }, message = "The id cant by null")
-	private UUID id;
+	protected UUID id;
 
 	@NotBlank(groups = { Update.class, Insert.class }, message = "The name is mandatory")
 	@NotNull(groups = { Update.class, Insert.class }, message = "The name cant by null")
 	@NotEmpty(groups = { Update.class, Insert.class }, message = "The name is mandatory")
-	private String name;
+	protected String name;
 
 	@NotBlank(groups = { Update.class, Insert.class }, message = "The name is mandatory")
 	@NotNull(groups = { Update.class, Insert.class }, message = "The name cant by null")
 	@NotEmpty(groups = { Update.class, Insert.class }, message = "The name is mandatory")
-	private String lastname;
+	protected String lastname;
 
 	@NotBlank(groups = { Update.class, Insert.class }, message = "The name i smandatory")
 	@NotNull(groups = { Update.class, Insert.class }, message = "The name cant by null")
 	@NotEmpty(groups = { Update.class, Insert.class }, message = "The name is mandatory")
 	@Email(groups = { Update.class, Insert.class }, message = "Invalid email pattern")
-	private String email;
+	protected String email;
 
 	private Role role;
 
-	private interface Insert {
+	protected interface Insert {
 
 	}
 
-	private interface Update {
+	protected interface Update {
 
 	}
 
-	private interface Read {
+	protected interface Read {
 
 	}
 
-	private interface Delete {
+	protected interface Delete {
 
 	}
 
-	private interface VerifyCode {
+	protected interface VerifyCode {
 
 	}
 }

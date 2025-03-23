@@ -37,7 +37,7 @@ public class ValidatedTokenUseCase {
 		if (!isValid) {
 			return new ResponseEntity<>(new ResponseObject("Is invalid", TypeResponse.ERROR), HttpStatus.NOT_FOUND);
 		}
-		var tokenInfo = repository.findUrlToken(token);
+		var tokenInfo = repository.findByToken(token);
 
 		if (!tokenInfo.isPresent()) {
 			return new ResponseEntity<>(new ResponseObject("Not exist", TypeResponse.ERROR), HttpStatus.NOT_FOUND);
