@@ -19,27 +19,27 @@ public class EventController {
 		this.service = service;
 	}
 
-	@GetMapping("/")
+	@GetMapping("/events")
 	public ResponseEntity<ResponseObject> getAllEvents() {
 		return service.findAll();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/events/{id}")
 	public ResponseEntity<ResponseObject> getEventById(@PathVariable UUID id) {
 		return service.findById(id);
 	}
 
-	@PostMapping("/")
+	@PostMapping("/events-create")
 	public ResponseEntity<ResponseObject> createEvent(@Valid @RequestBody EventDto eventDto) {
 		return service.save(eventDto);
 	}
 
-	@PutMapping("/")
+	@PutMapping("/events-update")
 	public ResponseEntity<ResponseObject> updateEvent(@Valid @RequestBody EventDto eventDto) {
 		return service.update(eventDto);
 	}
-
-	@DeleteMapping("/{id}")
+	//Este eliminar tambien es un eliminar fisico
+	@DeleteMapping("/events-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteEvent(@PathVariable UUID id) {
 		return service.deleteById(id);
 	}

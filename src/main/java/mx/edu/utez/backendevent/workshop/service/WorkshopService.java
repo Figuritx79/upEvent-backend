@@ -98,7 +98,8 @@ public class WorkshopService {
 				HttpStatus.OK
 		);
 	}
-
+	//Tengo un conflico con este, ya que si el taller esta asociado a un evento, no se puede eliminar
+	//ademas en este caso workshop, no tiene status, asi que tenemos que ver como es que hacemos ese eliminado
 	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
 		if (!repository.existsById(id)) {

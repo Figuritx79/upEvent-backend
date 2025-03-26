@@ -19,27 +19,27 @@ public class WorkshopController {
 		this.service = service;
 	}
 
-	@GetMapping("/")
+	@GetMapping("/workshops")
 	public ResponseEntity<ResponseObject> getAllWorkshops() {
 		return service.findAll();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/workshop/{id}")
 	public ResponseEntity<ResponseObject> getWorkshopById(@PathVariable UUID id) {
 		return service.findById(id);
 	}
 
-	@PostMapping("/")
+	@PostMapping("/workshop-create")
 	public ResponseEntity<ResponseObject> createWorkshop(@Valid @RequestBody WorkshopDto workshopDto) {
 		return service.save(workshopDto);
 	}
 
-	@PutMapping("/")
+	@PutMapping("/workshop-update")
 	public ResponseEntity<ResponseObject> updateWorkshop(@Valid @RequestBody WorkshopDto workshopDto) {
 		return service.update(workshopDto);
 	}
-
-	@DeleteMapping("/{id}")
+	//este eliminar es un eliminar fisico asi que hay que tener cuidado
+	@DeleteMapping("/workshop-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteWorkshop(@PathVariable UUID id) {
 		return service.deleteById(id);
 	}
