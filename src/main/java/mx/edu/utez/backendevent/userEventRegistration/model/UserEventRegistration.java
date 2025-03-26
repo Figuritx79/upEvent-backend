@@ -32,6 +32,9 @@ public class UserEventRegistration {
 	@JoinColumn(name = "id_event", nullable = false)
 	private Event event;
 
+	@Column(name = "status")
+	private boolean status;
+
 	@Column(name = "created_at", nullable = false)
 	private Timestamp createdAt;
 }

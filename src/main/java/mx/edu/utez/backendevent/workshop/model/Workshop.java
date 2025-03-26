@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.backendevent.event.model.Event;
-import mx.edu.utez.backendevent.speaker.model.Speaker;
+//import mx.edu.utez.backendevent.speaker.model.Speaker;
 
 import java.sql.Time;
 import java.util.UUID;
@@ -26,6 +26,9 @@ public class Workshop {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 
+	@Column(name = "speaker", nullable = false, length = 100)
+	private String speaker;
+
 	@ManyToOne
 	@JoinColumn(name = "id_event", nullable = false)
 	private Event event;
@@ -42,7 +45,17 @@ public class Workshop {
 	@Column(name = "image", length = 255)
 	private String image;
 
-	@ManyToOne
-	@JoinColumn(name = "id_speaker")
-	private Speaker speaker;
+	public Workshop(String name, String speaker, Event event, int capacity, String description, Time hour, String image) {
+		this.name = name;
+		this.speaker = speaker;
+		this.event = event;
+		this.capacity = capacity;
+		this.description = description;
+		this.hour = hour;
+		this.image = image;
+	}
+
+//	@ManyToOne
+//	@JoinColumn(name = "id_speaker")
+//	private Speaker speaker;
 }
