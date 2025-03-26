@@ -46,6 +46,17 @@ public class Event {
 	@JoinColumn(name = "id_landing_page")
 	private LandingPage landingPage;
 
+	public Event(String name, String description, Date startDate, Date endDate,
+				 String frontPage, boolean status, LandingPage landingPage) {
+		this.name = name;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.frontPage = frontPage;
+		this.status = status;
+		this.landingPage = landingPage;
+	}
+
 	@OneToMany(mappedBy = "event")
 	private List<Workshop> workshops;
 }

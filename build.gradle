@@ -43,6 +43,11 @@ dependencies {
 
     // cloudinary
     implementation("com.cloudinary:cloudinary-http44:1.34.0")
+
+	//QR
+	implementation 'com.google.zxing:core:3.5.2'
+	implementation 'com.google.zxing:javase:3.5.2'
+
 }
 
 tasks.named('test') {

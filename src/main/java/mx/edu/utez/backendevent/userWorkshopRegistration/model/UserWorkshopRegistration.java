@@ -8,6 +8,7 @@ import lombok.Setter;
 import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkshopRegistrationId;
 import mx.edu.utez.backendevent.workshop.model.Workshop;
+import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
 
@@ -31,6 +32,9 @@ public class UserWorkshopRegistration {
 	@MapsId("idEvent") // Mapea idEvent de la clave compuesta
 	@JoinColumn(name = "id_event", nullable = false)
 	private Workshop workshop;
+
+	@Column(name = "status")
+	private boolean status;
 
 	@Column(name = "created_at", nullable = false)
 	private Timestamp createdAt;
