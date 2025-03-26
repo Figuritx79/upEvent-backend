@@ -52,7 +52,7 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public ResponseEntity<ResponseObject> findChecker() {
-		var checker = repository.findChecker();
+		var checker = repository.findCheckers();
 		return new ResponseEntity<>(new ResponseObject("Checkers", checker, TypeResponse.SUCCESS), HttpStatus.OK);
 	}
 

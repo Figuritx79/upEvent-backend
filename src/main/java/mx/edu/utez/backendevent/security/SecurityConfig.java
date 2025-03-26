@@ -35,7 +35,7 @@ public class SecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/login", "/up", "/level", "/user/register-admin-event",
-								"/auth/recovery-password", "/token/valid", "/auth/reset-password")
+								"/auth/recovery-password", "/token/valid", "/auth/reset-password", "/user/checkers")
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
 						.hasAnyAuthority("SUPER_ADMIN")

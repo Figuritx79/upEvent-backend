@@ -20,13 +20,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query(value = "SELECT * FROM user WHERE id_role = 1", nativeQuery = true)
 	public List<User> findSuperAdmin();
 
-	@Query(value = "SELECT * FROM user WHERE id_role = 2", nativeQuery = true)
+	@Query(value = "SELECT * FROM user u WHERE id_role = 2", nativeQuery = true)
 	public List<EventAdminDto> findAdminEvent();
 
 	@Query(value = "SELECT * FROM user WHERE id_role = 3", nativeQuery = true)
 	public List<ParticipantDto> findNormal();
 
-	@Query(value = "SELECT * FROM user WHERE id_role = 4", nativeQuery = true)
-	public List<CheckerDto> findChecker();
+	@Query(value = "SELECT u.name, u.lastname, u.email, u.phone FROM user u WHERE id_role = 4", nativeQuery = true)
+	public List<CheckerDto> findCheckers();
 
 }
