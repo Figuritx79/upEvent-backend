@@ -4,9 +4,11 @@ import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.event.model.EventDto;
 import mx.edu.utez.backendevent.event.service.EventService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -30,8 +32,14 @@ public class EventController {
 		return service.findById(id);
 	}
 
-	@PostMapping("/events-create")
-	public ResponseEntity<ResponseObject> createEvent(@Valid @RequestBody EventDto eventDto) {
+	@PostMapping(value = "/events-create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> createEvent(
+			@Valid @RequestPart("eventData") EventDto eventDto,
+			@RequestPart(value = "frontPage", required = false) MultipartFile frontPage) {
+
+		if (frontPage != null) {
+			eventDto.setFrontPage(frontPage);
+		}
 		return service.save(eventDto);
 	}
 

@@ -14,6 +14,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import jakarta.servlet.http.Part;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class CloudinaryUpload {
@@ -29,10 +30,10 @@ public class CloudinaryUpload {
 
 	private Logger logger = LoggerFactory.getLogger(CloudinaryUpload.class);
 
-	public String UploadImage(Part image) throws IOException {
+	public String UploadImage(MultipartFile image) throws IOException {
 		String url = "";
-		var imageName = image.getName();
-		var imageByteArray = imageToByteArray(image);
+		var imageName = image.getOriginalFilename();
+		var imageByteArray = imageName.getBytes();
 		var config = ObjectUtils.asMap(
 				"cloud_name", "dt9d7lbhg",
 				"api_key", apiKeyCloudinary,

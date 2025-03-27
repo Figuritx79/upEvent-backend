@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.backendevent.event.model.Event;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Time;
 import java.util.UUID;
@@ -38,6 +39,7 @@ public class WorkshopDto {
 	private Time hour;
 
 	private String image;
+	private MultipartFile imageFile;
 
 	public interface Create {}
 	public interface Update {}

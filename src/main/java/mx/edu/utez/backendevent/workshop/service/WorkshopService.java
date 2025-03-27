@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.workshop.service;
 
+import mx.edu.utez.backendevent.util.CloudinaryUpload;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.Workshop;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import mx.edu.utez.backendevent.util.TypeResponse;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,9 +22,11 @@ import java.util.UUID;
 public class WorkshopService {
 
 	private final WorkshopRepository repository;
+	private final CloudinaryUpload cloudinaryUpload;
 
-	public WorkshopService(WorkshopRepository repository) {
+	public WorkshopService(WorkshopRepository repository, CloudinaryUpload cloudinaryUpload) {
 		this.repository = repository;
+		this.cloudinaryUpload = cloudinaryUpload;
 	}
 
 	@Transactional(readOnly = true)
@@ -57,6 +61,19 @@ public class WorkshopService {
 
 	@Transactional
 	public ResponseEntity<ResponseObject> save(WorkshopDto workshopDto) {
+		String imageUrl = "";
+
+
+		if (workshopDto.getImageFile() != null && !workshopDto.getImageFile().isEmpty()) {
+			try {
+				imageUrl = cloudinaryUpload.UploadImage(workshopDto.getImageFile());
+			} catch (IOException e) {
+				return new ResponseEntity<>(
+						new ResponseObject("Error al subir la imagen", null, TypeResponse.ERROR),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
 		Workshop workshop = new Workshop();
 		workshop.setName(workshopDto.getName());
 		workshop.setSpeaker(workshopDto.getSpeaker());
@@ -64,7 +81,7 @@ public class WorkshopService {
 		workshop.setCapacity(workshopDto.getCapacity());
 		workshop.setDescription(workshopDto.getDescription());
 		workshop.setHour(workshopDto.getHour());
-		workshop.setImage(workshopDto.getImage());
+		workshop.setImage(imageUrl);
 
 		Workshop savedWorkshop = repository.saveAndFlush(workshop);
 		return new ResponseEntity<>(
@@ -84,13 +101,26 @@ public class WorkshopService {
 		}
 
 		Workshop workshop = optionalWorkshop.get();
+		String imageUrl = workshop.getImage(); // Mantener la imagen existente por defecto
+
+
+		if (workshopDto.getImageFile() != null && !workshopDto.getImageFile().isEmpty()) {
+			try {
+				imageUrl = cloudinaryUpload.UploadImage(workshopDto.getImageFile());
+			} catch (IOException e) {
+				return new ResponseEntity<>(
+						new ResponseObject("Error al subir la imagen", null, TypeResponse.ERROR),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
 		workshop.setName(workshopDto.getName());
 		workshop.setSpeaker(workshopDto.getSpeaker());
 		workshop.setEvent(workshopDto.getEvent());
 		workshop.setCapacity(workshopDto.getCapacity());
 		workshop.setDescription(workshopDto.getDescription());
 		workshop.setHour(workshopDto.getHour());
-		workshop.setImage(workshopDto.getImage());
+		workshop.setImage(imageUrl);
 
 		Workshop updatedWorkshop = repository.saveAndFlush(workshop);
 		return new ResponseEntity<>(

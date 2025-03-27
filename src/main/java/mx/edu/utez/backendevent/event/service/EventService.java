@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.event.service;
 
+import mx.edu.utez.backendevent.util.CloudinaryUpload;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.event.model.Event;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,9 +21,11 @@ import java.util.UUID;
 public class EventService {
 
 	private final EventRepository repository;
+	private final CloudinaryUpload cloudinaryUpload;
 
-	public EventService(EventRepository repository) {
+	public EventService(EventRepository repository, CloudinaryUpload cloudinaryUpload) {
 		this.repository = repository;
+		this.cloudinaryUpload = cloudinaryUpload;
 	}
 
 	@Transactional(readOnly = true)
@@ -65,16 +69,27 @@ public class EventService {
 					HttpStatus.BAD_REQUEST);
 		}
 
+		String imageUrl = "";
+		if (eventDto.getFrontPage() != null && !eventDto.getFrontPage().isEmpty()) {
+			try {
+				imageUrl = cloudinaryUpload.UploadImage(eventDto.getFrontPage());
+			} catch (IOException e) {
+				return new ResponseEntity<>(
+						new ResponseObject("Error al subir la imagen", null, TypeResponse.ERROR),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
 		Event event = new Event(
 				eventDto.getName(),
 				eventDto.getDescription(),
 				eventDto.getStartDate(),
 				eventDto.getEndDate(),
-				eventDto.getFrontPage());
+				imageUrl);
 
 		Event savedEvent = repository.saveAndFlush(event);
 		return new ResponseEntity<>(
-				new ResponseObject("Evento creado exitosamente", TypeResponse.SUCCESS),
+				new ResponseObject("Evento creado exitosamente", savedEvent, TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
 	}
 
@@ -108,23 +123,26 @@ public class EventService {
 
 	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
-		if (!repository.existsById(id)) {
+		Optional<Event> optionalEvent = repository.findById(id);
+		if (optionalEvent.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
 					HttpStatus.NOT_FOUND);
 		}
+		Event event = optionalEvent.get();
 
-		Event event = repository.findById(id).get();
 		if (!event.getWorkshops().isEmpty()) {
 			return new ResponseEntity<>(
-					new ResponseObject("No se puede eliminar el evento porque tiene talleres asociados", null,
+					new ResponseObject("No se puede desactivar el evento porque tiene talleres asociados", null,
 							TypeResponse.ERROR),
 					HttpStatus.BAD_REQUEST);
 		}
 
-		repository.deleteById(id);
+		event.setStatus(false);
+		repository.save(event);
+
 		return new ResponseEntity<>(
-				new ResponseObject("Evento eliminado exitosamente", null, TypeResponse.SUCCESS),
+				new ResponseObject("Evento desactivado (eliminado lógico)", event, TypeResponse.SUCCESS),
 				HttpStatus.OK);
 	}
 }
