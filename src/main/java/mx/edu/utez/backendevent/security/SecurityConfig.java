@@ -43,7 +43,7 @@ public class SecurityConfig {
 								"/level", "/api/event/events/**", "/api/event/events-delete/**",
 								"/api/event/events/update/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
-						.requestMatchers("/sata")
+						.requestMatchers("/event/events", "/api/event/events/**")
 						.hasRole("NORMAL")
 						.requestMatchers("/qr/send")
 						.hasAnyAuthority("CHECADOR")
