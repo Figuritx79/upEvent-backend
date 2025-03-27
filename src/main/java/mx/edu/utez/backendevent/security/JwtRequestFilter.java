@@ -56,11 +56,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		if (jwt != null) {
 			try {
 				username = jwtUtil.extractUsername(jwt);
+				System.out.println(username);
 			} catch (Exception e) {
 				logger.error("Error al extraer el nombre de usuario del token: " + e.getMessage());
 			}
 		}
-
+		System.out.println(jwt);
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

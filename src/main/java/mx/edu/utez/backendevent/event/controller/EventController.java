@@ -5,6 +5,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.event.model.EventDto;
 import mx.edu.utez.backendevent.event.service.EventService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -38,7 +39,8 @@ public class EventController {
 	public ResponseEntity<ResponseObject> updateEvent(@Valid @RequestBody EventDto eventDto) {
 		return service.update(eventDto);
 	}
-	//Este eliminar tambien es un eliminar fisico
+
+	// Este eliminar tambien es un eliminar fisico
 	@DeleteMapping("/events-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteEvent(@PathVariable UUID id) {
 		return service.deleteById(id);

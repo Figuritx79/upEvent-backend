@@ -45,7 +45,11 @@ public class Workshop {
 	@Column(name = "image", length = 255)
 	private String image;
 
-	public Workshop(String name, String speaker, Event event, int capacity, String description, Time hour, String image) {
+	@Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
+	private boolean status;
+
+	public Workshop(String name, String speaker, Event event, int capacity, String description, Time hour,
+			String image) {
 		this.name = name;
 		this.speaker = speaker;
 		this.event = event;
@@ -55,7 +59,7 @@ public class Workshop {
 		this.image = image;
 	}
 
-//	@ManyToOne
-//	@JoinColumn(name = "id_speaker")
-//	private Speaker speaker;
+	// @ManyToOne
+	// @JoinColumn(name = "id_speaker")
+	// private Speaker speaker;
 }

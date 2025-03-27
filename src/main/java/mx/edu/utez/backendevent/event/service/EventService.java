@@ -30,13 +30,11 @@ public class EventService {
 		if (events.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("No hay eventos registrados", null, TypeResponse.WARN),
-					HttpStatus.OK
-			);
+					HttpStatus.OK);
 		}
 		return new ResponseEntity<>(
 				new ResponseObject("Lista de eventos", events, TypeResponse.SUCCESS),
-				HttpStatus.OK
-		);
+				HttpStatus.OK);
 	}
 
 	@Transactional(readOnly = true)
@@ -45,29 +43,26 @@ public class EventService {
 		if (event.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
-					HttpStatus.NOT_FOUND
-			);
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(
 				new ResponseObject("Evento encontrado", event.get(), TypeResponse.SUCCESS),
-				HttpStatus.OK
-		);
+				HttpStatus.OK);
 	}
 
 	@Transactional
 	public ResponseEntity<ResponseObject> save(EventDto eventDto) {
 		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
 			return new ResponseEntity<>(
-					new ResponseObject("La fecha de fin no puede ser anterior a la fecha de inicio", null, TypeResponse.ERROR),
-					HttpStatus.BAD_REQUEST
-			);
+					new ResponseObject("La fecha de fin no puede ser anterior a la fecha de inicio", null,
+							TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		if (repository.existsByName(eventDto.getName())) {
 			return new ResponseEntity<>(
 					new ResponseObject("Ya existe un evento con ese nombre", null, TypeResponse.ERROR),
-					HttpStatus.BAD_REQUEST
-			);
+					HttpStatus.BAD_REQUEST);
 		}
 
 		Event event = new Event(
@@ -75,16 +70,12 @@ public class EventService {
 				eventDto.getDescription(),
 				eventDto.getStartDate(),
 				eventDto.getEndDate(),
-				eventDto.getFrontPage(),
-				eventDto.getStatus(),
-				eventDto.getLandingPage()
-		);
+				eventDto.getFrontPage());
 
 		Event savedEvent = repository.saveAndFlush(event);
 		return new ResponseEntity<>(
-				new ResponseObject("Evento creado exitosamente", savedEvent, TypeResponse.SUCCESS),
-				HttpStatus.CREATED
-		);
+				new ResponseObject("Evento creado exitosamente", TypeResponse.SUCCESS),
+				HttpStatus.CREATED);
 	}
 
 	@Transactional
@@ -93,15 +84,14 @@ public class EventService {
 		if (optionalEvent.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
-					HttpStatus.NOT_FOUND
-			);
+					HttpStatus.NOT_FOUND);
 		}
 
 		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
 			return new ResponseEntity<>(
-					new ResponseObject("La fecha de fin no puede ser anterior a la fecha de inicio", null, TypeResponse.ERROR),
-					HttpStatus.BAD_REQUEST
-			);
+					new ResponseObject("La fecha de fin no puede ser anterior a la fecha de inicio", null,
+							TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		Event event = optionalEvent.get();
@@ -109,15 +99,11 @@ public class EventService {
 		event.setDescription(eventDto.getDescription());
 		event.setStartDate(eventDto.getStartDate());
 		event.setEndDate(eventDto.getEndDate());
-		event.setFrontPage(eventDto.getFrontPage());
-		event.setStatus(eventDto.getStatus());
-		event.setLandingPage(eventDto.getLandingPage());
 
 		Event updatedEvent = repository.saveAndFlush(event);
 		return new ResponseEntity<>(
 				new ResponseObject("Evento actualizado exitosamente", updatedEvent, TypeResponse.SUCCESS),
-				HttpStatus.OK
-		);
+				HttpStatus.OK);
 	}
 
 	@Transactional
@@ -125,22 +111,20 @@ public class EventService {
 		if (!repository.existsById(id)) {
 			return new ResponseEntity<>(
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
-					HttpStatus.NOT_FOUND
-			);
+					HttpStatus.NOT_FOUND);
 		}
 
 		Event event = repository.findById(id).get();
 		if (!event.getWorkshops().isEmpty()) {
 			return new ResponseEntity<>(
-					new ResponseObject("No se puede eliminar el evento porque tiene talleres asociados", null, TypeResponse.ERROR),
-					HttpStatus.BAD_REQUEST
-			);
+					new ResponseObject("No se puede eliminar el evento porque tiene talleres asociados", null,
+							TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		repository.deleteById(id);
 		return new ResponseEntity<>(
 				new ResponseObject("Evento eliminado exitosamente", null, TypeResponse.SUCCESS),
-				HttpStatus.OK
-		);
+				HttpStatus.OK);
 	}
 }

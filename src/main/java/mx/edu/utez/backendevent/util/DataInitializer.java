@@ -80,28 +80,28 @@ public class DataInitializer {
 				PasswordResetToken passwordResetToken = new PasswordResetToken();
 			}
 
-			Optional<User> checker = userRepository.findByEmail("20233tn106@utez.edu.mx");
-			if (!checker.isPresent()) {
-				var encoder = new BCryptPasswordEncoder();
-				var name = "Antonio";
-				var lastname = "Gonzalez";
-				var email = "20233tn0106@utez.edu.mx";
-				var password = encoder.encode("123456789");
-				var menGender = new Gender(1);
-				var adminRole = new Role(4);
-				var phone = "7774670489";
-				var userChecker = new User();
+			// Optional<User> checker =
+			// userRepository.findByEmail("20233tn106@utez.edu.mx");
+			// if (!checker.isPresent()) {
+			// var encoder = new BCryptPasswordEncoder();
+			// var name = "Antonio";
+			// var lastname = "Gonzalez";
+			// var email = "20233tn0106@utez.edu.mx";
+			// var password = encoder.encode("123456789");
+			// var menGender = new Gender(1);
+			// var adminRole = new Role(4);
+			// var phone = "7774670489";
+			// var userChecker = new User();
 
-				userChecker.setEmail(email);
-				userChecker.setLastname(lastname);
-				userChecker.setName(name);
-				userChecker.setPassword(password);
-				userChecker.setGender(menGender);
-				userChecker.setRole(adminRole);
-				userChecker.setPhone(phone);
-				userRepository.saveAndFlush(userChecker);
-
-			}
+			// userChecker.setEmail(email);
+			// userChecker.setLastname(lastname);
+			// userChecker.setName(name);
+			// userChecker.setPassword(password);
+			// userChecker.setGender(menGender);
+			// userChecker.setRole(adminRole);
+			// userChecker.setPhone(phone);
+			// userRepository.saveAndFlush(userChecker);
+			// }
 			// Optional<User> userTest =
 			// userRepository.getUserByEmail("gonherenrique@gmail.com");
 

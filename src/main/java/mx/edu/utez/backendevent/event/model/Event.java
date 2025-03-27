@@ -12,6 +12,10 @@ import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "event")
 @Getter
@@ -39,22 +43,33 @@ public class Event {
 	@Column(name = "front_page", length = 255)
 	private String frontPage;
 
-	@Column(name = "status")
-	private boolean status;
+	@Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
+	private boolean status = true;
 
-	@ManyToOne
-	@JoinColumn(name = "id_landing_page")
+	@OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private LandingPage landingPage;
 
 	public Event(String name, String description, Date startDate, Date endDate,
-				 String frontPage, boolean status, LandingPage landingPage) {
+			String frontPage, boolean status) {
 		this.name = name;
 		this.description = description;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.frontPage = frontPage;
 		this.status = status;
-		this.landingPage = landingPage;
+	}
+
+	public Event(String name, String description, Date startDate, Date endDate, String frontPage) {
+		this.name = name;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.frontPage = frontPage;
+	}
+
+	public Event(String name2, String description2, Date startDate2, Date endDate2, MultipartFile frontPage2) {
+		// TODO Auto-generated constructor stub
 	}
 
 	@OneToMany(mappedBy = "event")

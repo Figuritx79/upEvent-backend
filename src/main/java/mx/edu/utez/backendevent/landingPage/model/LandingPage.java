@@ -21,10 +21,6 @@ public class LandingPage {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@OneToOne
-	@JoinColumn(name = "id_event")
-	private Event event;
-
 	@Column(name = "logo", length = 255)
 	private String logo;
 
@@ -36,4 +32,8 @@ public class LandingPage {
 
 	@Column(name = "slug", length = 40)
 	private String slug;
+
+	@OneToOne
+	@JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false)
+	private Event event;
 }

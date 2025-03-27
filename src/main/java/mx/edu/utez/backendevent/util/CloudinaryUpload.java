@@ -18,52 +18,52 @@ import jakarta.servlet.http.Part;
 @Component
 public class CloudinaryUpload {
 
-    @Value("${API_KEY_CLOUDINARY}")
-    private String apiKeyCloudinary;
+	@Value("${API_KEY_CLOUDINARY}")
+	private String apiKeyCloudinary;
 
-    @Value("${API_SECRET_CLOUDINARY}")
-    private String apiSecretCloudinary;
+	@Value("${API_SECRET_CLOUDINARY}")
+	private String apiSecretCloudinary;
 
-    // private String env = "CLOUDINARY_URL=cloudinary://" + apiKeyCloudinary + ":"
-    // + apiSecretCloudinary + "@dt9d7lbhg";
+	// private String env = "CLOUDINARY_URL=cloudinary://" + apiKeyCloudinary + ":"
+	// + apiSecretCloudinary + "@dt9d7lbhg";
 
-    private Logger logger = LoggerFactory.getLogger(CloudinaryUpload.class);
+	private Logger logger = LoggerFactory.getLogger(CloudinaryUpload.class);
 
-    public String UploadImage(Part image) throws IOException {
-        String url = "";
-        var imageName = image.getName();
-        var imageByteArray = imageToByteArray(image);
-        var config = ObjectUtils.asMap(
-                "cloud_name", "dt9d7lbhg",
-                "api_key", apiKeyCloudinary,
-                "api_secret", apiSecretCloudinary,
-                "public_id", imageName,
-                "resource_type", "image");
-        try {
-            Cloudinary cloudinary = new Cloudinary();
-            var result = cloudinary.uploader().upload(imageByteArray, config);
+	public String UploadImage(Part image) throws IOException {
+		String url = "";
+		var imageName = image.getName();
+		var imageByteArray = imageToByteArray(image);
+		var config = ObjectUtils.asMap(
+				"cloud_name", "dt9d7lbhg",
+				"api_key", apiKeyCloudinary,
+				"api_secret", apiSecretCloudinary,
+				"public_id", imageName,
+				"resource_type", "image");
+		try {
+			Cloudinary cloudinary = new Cloudinary();
+			var result = cloudinary.uploader().upload(imageByteArray, config);
 
-            url = result.get("url").toString();
-            logger.info("IMAGE SUCCES UPLOAD");
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("IMAGE ERROR UPLOAD");
-        }
-        return url;
-    }
+			url = result.get("url").toString();
+			logger.info("IMAGE SUCCES UPLOAD");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("IMAGE ERROR UPLOAD");
+		}
+		return url;
+	}
 
-    public byte[] imageToByteArray(Part image) throws IOException {
-        try (InputStream inputStream = image.getInputStream();
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+	private byte[] imageToByteArray(Part image) throws IOException {
+		try (InputStream inputStream = image.getInputStream();
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
 
-            int nRead;
-            byte[] data = new byte[1024]; // Tamaño del buffer
+			int nRead;
+			byte[] data = new byte[1024]; // Tamaño del buffer
 
-            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
+			while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
 
-            return buffer.toByteArray();
-        }
-    }
+			return buffer.toByteArray();
+		}
+	}
 }

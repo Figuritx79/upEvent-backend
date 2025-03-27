@@ -34,18 +34,19 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/auth/login", "/up", "/level", "/user/register-admin-event",
+						.requestMatchers("/auth/login", "/up", "/user/register-admin-event",
 								"/auth/recovery-password", "/token/valid", "/auth/reset-password", "/user/checkers")
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/category/save", "/api/category/update",
-								"/api/course/active", "/api/course/update", "/api/course/status")
-						.hasRole("ADMIN_EVENTO")
-						.requestMatchers("/api/sata")
+						.requestMatchers("/event/events", "/event/events-create",
+								"/level", "/api/event/events/**", "/api/event/events-delete/**",
+								"/api/event/events/update/**")
+						.hasAnyAuthority("ADMIN_EVENTO")
+						.requestMatchers("/sata")
 						.hasRole("NORMAL")
-						.requestMatchers("/api/animal")
-						.hasRole("CHECADOR")
+						.requestMatchers("/qr/send")
+						.hasAnyAuthority("CHECADOR")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.cors(
