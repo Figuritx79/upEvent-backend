@@ -45,7 +45,7 @@ public class SecurityConfig {
 						.hasAnyAuthority("ADMIN_EVENTO")
 						.requestMatchers("/event/events", "/api/event/events/**")
 						.hasRole("NORMAL")
-						.requestMatchers("/qr/send")
+						.requestMatchers("/qr/send", "/event/events", "/api/event/events/**")
 						.hasAnyAuthority("CHECADOR")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
