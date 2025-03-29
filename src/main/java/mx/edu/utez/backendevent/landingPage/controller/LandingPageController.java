@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/landing-page")
+@RequestMapping("/api/landing-page")
 public class LandingPageController {
 
 	private final LandingPageService service;

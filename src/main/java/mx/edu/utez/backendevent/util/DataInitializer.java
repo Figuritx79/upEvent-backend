@@ -77,7 +77,6 @@ public class DataInitializer {
 				User adminInsert = new User("Juan", "Gonzalez", date, "20233tn059@utez.edu.mx", password,
 						menGender, adminRole);
 				userRepository.saveAndFlush(adminInsert);
-				PasswordResetToken passwordResetToken = new PasswordResetToken();
 			}
 
 			Optional<User> checker = userRepository.findByEmail("20233tn106@utez.edu.mx");
@@ -85,7 +84,7 @@ public class DataInitializer {
 				var encoder = new BCryptPasswordEncoder();
 				var name = "Antonio";
 				var lastname = "Gonzalez";
-				var email = "20233tn0106@utez.edu.mx";
+				var email = "20233tn106@utez.edu.mx";
 				var password = encoder.encode("123456789");
 				var menGender = new Gender(1);
 				var adminRole = new Role(4);

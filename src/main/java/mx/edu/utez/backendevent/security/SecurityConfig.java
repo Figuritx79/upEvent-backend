@@ -34,14 +34,13 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/auth/login", "/up", "/user/register-admin-event",
-								"/auth/recovery-password", "/token/valid", "/auth/reset-password", "/user/checkers")
+						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
+								"/api/auth/recovery-password", "/api/token/valid", "/api/auth/reset-password",
+								"/api/user/checkers")
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/event/events", "/event/events-create",
-								"/level", "/api/event/events/**", "/api/event/events-delete/**",
-								"/api/event/events/update/**")
+						.requestMatchers("/api/event/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						.requestMatchers("/event/events", "/api/event/events/**")
 						.hasRole("NORMAL")

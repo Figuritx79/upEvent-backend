@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,7 +55,7 @@ public class EventService {
 				HttpStatus.OK);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> save(EventDto eventDto) {
 		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
 			return new ResponseEntity<>(
@@ -89,11 +90,11 @@ public class EventService {
 
 		Event savedEvent = repository.saveAndFlush(event);
 		return new ResponseEntity<>(
-				new ResponseObject("Evento creado exitosamente", savedEvent, TypeResponse.SUCCESS),
+				new ResponseObject("Evento creado exitosamente", TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> update(EventDto eventDto) {
 		Optional<Event> optionalEvent = repository.findById(eventDto.getId());
 		if (optionalEvent.isEmpty()) {
@@ -121,7 +122,7 @@ public class EventService {
 				HttpStatus.OK);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
 		Optional<Event> optionalEvent = repository.findById(id);
 		if (optionalEvent.isEmpty()) {

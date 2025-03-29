@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/workshop")
+@RequestMapping("/api/workshop")
 public class WorkshopController {
 
 	private final WorkshopService service;
@@ -52,7 +52,8 @@ public class WorkshopController {
 		}
 		return service.update(workshopDto);
 	}
-	//este eliminar es un eliminar fisico asi que hay que tener cuidado
+
+	// este eliminar es un eliminar fisico asi que hay que tener cuidado
 	@DeleteMapping("/workshop-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteWorkshop(@PathVariable UUID id) {
 		return service.deleteById(id);

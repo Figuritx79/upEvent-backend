@@ -6,14 +6,15 @@ import mx.edu.utez.backendevent.event.model.EventDto;
 import mx.edu.utez.backendevent.event.service.EventService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/api/event")
 public class EventController {
 
 	private final EventService service;
@@ -32,11 +33,11 @@ public class EventController {
 		return service.findById(id);
 	}
 
-	@PostMapping(value = "/events-create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseObject> createEvent(
-			@Valid @RequestPart("eventData") EventDto eventDto,
-			@RequestPart(value = "frontPage", required = false) MultipartFile frontPage) {
-
+	@PostMapping(value = "/event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> createEvet(@RequestPart("eventDto") String eventDtoStr,
+			@RequestPart("frontPage") MultipartFile frontPage) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		EventDto eventDto = objectMapper.readValue(eventDtoStr, EventDto.class);
 		if (frontPage != null) {
 			eventDto.setFrontPage(frontPage);
 		}

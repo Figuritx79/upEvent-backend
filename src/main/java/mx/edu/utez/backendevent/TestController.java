@@ -10,7 +10,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/api")
 public class TestController {
 	@GetMapping("/up")
 	public ResponseEntity<ResponseObject> up() {
@@ -18,7 +18,7 @@ public class TestController {
 	}
 
 	@GetMapping("/level")
-	public String level(){
+	public String level() {
 		return "Hello";
 	}
 }

@@ -10,7 +10,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
-@RequestMapping("/role")
+@RequestMapping("/api/role")
 @RestController
 public class RoleController {
 	private RoleService roleService;

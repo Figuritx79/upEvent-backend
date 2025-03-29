@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/api/token")
 public class PasswordResetTokenController {
 	private ValidatedTokenUseCase validTokenUseCase;
 

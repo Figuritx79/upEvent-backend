@@ -33,7 +33,7 @@ public class CloudinaryUpload {
 	public String UploadImage(MultipartFile image) throws IOException {
 		String url = "";
 		var imageName = image.getOriginalFilename();
-		var imageByteArray = imageName.getBytes();
+		var imageByteArray = image.getBytes();
 		var config = ObjectUtils.asMap(
 				"cloud_name", "dt9d7lbhg",
 				"api_key", apiKeyCloudinary,

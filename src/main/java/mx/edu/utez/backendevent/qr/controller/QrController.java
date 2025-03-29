@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/qr")
+@RequestMapping("/api/qr")
 public class QrController {
 
 	private final QrEmailService qrEmailService;
