@@ -55,18 +55,6 @@ public class LandingPageController {
 		}
 	}
 
-	// @PostMapping("/landing-page/create")
-	// public ResponseEntity<ResponseObject> createLandingPage(@Valid @RequestBody
-	// LandingPageDto landingPageDto) {
-	// return service.save(landingPageDto);
-	// }
-
-	// @PutMapping("/landing-page/update")
-	// public ResponseEntity<ResponseObject> updateLandingPage(@Valid @RequestBody
-	// LandingPageDto landingPageDto) {
-	// return service.update(landingPageDto);
-	// }
-
 	@DeleteMapping("/landing/delete/{id}")
 	public ResponseEntity<ResponseObject> deleteLandingPage(@PathVariable UUID id) {
 		return service.deleteById(id);

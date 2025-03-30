@@ -42,8 +42,11 @@ public class Workshop {
 	@Column(name = "hour")
 	private Time hour;
 
-	@Column(name = "image", length = 255)
+	@Column(name = "workshop_image", length = 255)
 	private String image;
+
+	@Column(name = "speaker_image", columnDefinition = "VARCHAR(255)")
+	private String speakerImage;
 
 	@Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
 	private boolean status;
