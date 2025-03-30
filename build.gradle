@@ -48,6 +48,9 @@ dependencies {
 	implementation 'com.google.zxing:core:3.5.2'
 	implementation 'com.google.zxing:javase:3.5.2'
 
+	// Json Serializae
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
+
 }
 
 tasks.named('test') {

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.backendevent.landingPage.model.LandingPage;
+import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.workshop.model.Workshop;
 
 import java.sql.Date;
@@ -50,6 +51,10 @@ public class Event {
 	@JsonIgnore
 	private LandingPage landingPage;
 
+	@ManyToOne
+	@JoinColumn(name = "id_admin", nullable = true)
+	private User admin;
+
 	public Event(String name, String description, Date startDate, Date endDate,
 			String frontPage, boolean status) {
 		this.name = name;
@@ -68,8 +73,16 @@ public class Event {
 		this.frontPage = frontPage;
 	}
 
+	public Event(String name, String description, Date startDate, Date endDate, String frontPage, User admin) {
+		this.name = name;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.frontPage = frontPage;
+		this.admin = admin;
+	}
+
 	public Event(String name2, String description2, Date startDate2, Date endDate2, MultipartFile frontPage2) {
-		// TODO Auto-generated constructor stub
 	}
 
 	@OneToMany(mappedBy = "event")

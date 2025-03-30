@@ -7,7 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mx.edu.utez.backendevent.event.model.Event;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "landing_page")
@@ -24,16 +30,28 @@ public class LandingPage {
 	@Column(name = "logo", length = 255)
 	private String logo;
 
+	// Nos permite que jdbc mapee un Map a json y es mas sencillo de usar
+	// https://www.baeldung.com/hibernate-persist-json-object
+	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(name = "gallery", columnDefinition = "JSON")
-	private String gallery;
+	private Map<String, String> galleryJson = new HashMap<>();
 
 	@Column(name = "url", length = 200)
 	private String url;
 
-	@Column(name = "slug", length = 40)
+	@Column(name = "slug", length = 40, unique = true)
 	private String slug;
 
 	@OneToOne
+	@JsonIgnore
 	@JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false)
 	private Event event;
+
+	public LandingPage(String logo, Map<String, String> galleryJson, String slug, Event event) {
+		this.logo = logo;
+		this.galleryJson = galleryJson;
+		this.slug = slug;
+		this.event = event;
+	}
+
 }

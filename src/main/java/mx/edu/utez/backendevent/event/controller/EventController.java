@@ -2,8 +2,13 @@ package mx.edu.utez.backendevent.event.controller;
 
 import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.util.ResponseObject;
+import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.event.model.EventDto;
+import mx.edu.utez.backendevent.event.model.dtos.CreateEventDto;
 import mx.edu.utez.backendevent.event.service.EventService;
+import mx.edu.utez.backendevent.user.model.dto.CreateEventAdminDto;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/event")
@@ -28,6 +34,16 @@ public class EventController {
 		return service.findAll();
 	}
 
+	@GetMapping("/own/{admin}")
+	public ResponseEntity<ResponseObject> findMyOwnEvents(@PathVariable String admin) {
+		if (admin.isEmpty()) {
+			return new ResponseEntity<>(new ResponseObject("No esta el admin", TypeResponse.WARN),
+					HttpStatus.BAD_REQUEST);
+		}
+		var id = UUID.fromString(admin);
+		return service.findMyOwnEvents(id);
+	}
+
 	@GetMapping("/events/{id}")
 	public ResponseEntity<ResponseObject> getEventById(@PathVariable UUID id) {
 		return service.findById(id);
@@ -37,7 +53,7 @@ public class EventController {
 	public ResponseEntity<ResponseObject> createEvet(@RequestPart("eventDto") String eventDtoStr,
 			@RequestPart("frontPage") MultipartFile frontPage) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
-		EventDto eventDto = objectMapper.readValue(eventDtoStr, EventDto.class);
+		CreateEventDto eventDto = objectMapper.readValue(eventDtoStr, CreateEventDto.class);
 		if (frontPage != null) {
 			eventDto.setFrontPage(frontPage);
 		}

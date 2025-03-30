@@ -36,11 +36,11 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
 								"/api/auth/recovery-password", "/api/token/valid", "/api/auth/reset-password",
-								"/api/user/checkers")
+								"/api/user/checkers", "/api/landing-page/landing/**")
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/**")
+						.requestMatchers("/api/event/**", "/api/landing-page/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						.requestMatchers("/event/events", "/api/event/events/**")
 						.hasRole("NORMAL")

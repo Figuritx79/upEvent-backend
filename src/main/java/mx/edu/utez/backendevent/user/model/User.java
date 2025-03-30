@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mx.edu.utez.backendevent.event.model.Event;
 import mx.edu.utez.backendevent.gender.model.Gender;
 import mx.edu.utez.backendevent.occupation.model.Occupation;
 import mx.edu.utez.backendevent.passwordResetToken.model.PasswordResetToken;
@@ -84,6 +85,10 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
 	private List<PasswordResetToken> passwordResetTokens;
+
+	@OneToMany(mappedBy = "admin")
+	@JsonIgnore
+	private List<Event> events;
 
 	public User(String name, String lastname, Date birthdDate, String email, String password, String phone,
 			String residence, String companyName, Gender gender, Occupation occupation, Role role) {
