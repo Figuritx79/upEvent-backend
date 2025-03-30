@@ -73,11 +73,13 @@ public class AuthService {
 
 		User user = repository.findByEmail(authRequest.getEmail())
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
 		if (!encoder.matches(authRequest.getPassword(), user.getPassword())) {
 			log.warn("El usuario" + user.getEmail() + "ingreso con la contra equivocada");
 			return new ResponseEntity<>(new ResponseObject("Fallo al autenticar", TypeResponse.ERROR),
 					HttpStatus.UNAUTHORIZED);
 		}
+
 		var headers = new HttpHeaders();
 		var mapResponse = new HashMap<String, String>();
 

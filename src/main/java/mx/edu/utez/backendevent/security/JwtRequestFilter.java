@@ -39,10 +39,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		// Autenticacion por medio de cookies y Header Authorization
 		final var tokenAuthorization = request.getCookies();
 		String username = null;
 		String jwt = null;
-
+		var headerAuthorization = request.getHeader("Authorization");
 		if (tokenAuthorization != null) {
 			for (Cookie cookie : tokenAuthorization) {
 				if ("access_token".equals(cookie.getName())) {
@@ -53,15 +54,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			}
 		}
 
+		if (jwt == null && headerAuthorization != null && headerAuthorization.startsWith("Bearer ")) {
+			jwt = headerAuthorization.substring(7);
+		}
 		if (jwt != null) {
 			try {
 				username = jwtUtil.extractUsername(jwt);
-				System.out.println(username);
+				logger.info(username.toString() + " Esta trando de iniciar sesion o autenticarse");
 			} catch (Exception e) {
 				logger.error("Error al extraer el nombre de usuario del token: " + e.getMessage());
 			}
 		}
-		System.out.println(jwt);
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
