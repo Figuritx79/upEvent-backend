@@ -1,13 +1,21 @@
 package mx.edu.utez.backendevent.workshop.controller;
 
 import jakarta.validation.Valid;
+import mx.edu.utez.backendevent.landingPage.model.dtos.CreateLandingPageDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
+import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.WorkshopDto;
+import mx.edu.utez.backendevent.workshop.model.WorkshopRepository;
+import mx.edu.utez.backendevent.workshop.model.dtos.CreateWorkShopDto;
 import mx.edu.utez.backendevent.workshop.service.WorkshopService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
@@ -15,10 +23,13 @@ import java.util.UUID;
 @RequestMapping("/api/workshop")
 public class WorkshopController {
 
+	private final WorkshopRepository workshopRepository;
+
 	private final WorkshopService service;
 
-	public WorkshopController(WorkshopService service) {
+	public WorkshopController(WorkshopService service, WorkshopRepository workshopRepository) {
 		this.service = service;
+		this.workshopRepository = workshopRepository;
 	}
 
 	@GetMapping("/workshops")
@@ -31,26 +42,26 @@ public class WorkshopController {
 		return service.findById(id);
 	}
 
-	@PostMapping(value = "/workshop-create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseObject> createWorkshop(
-			@Valid @RequestPart("workshopData") WorkshopDto workshopDto,
-			@RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
-
-		if (imageFile != null) {
-			workshopDto.setImageFile(imageFile);
-		}
-		return service.save(workshopDto);
+	@GetMapping("/event/{eventId}")
+	public ResponseEntity<ResponseObject> findByEventId(@PathVariable String eventId) {
+		var idUuid = UUID.fromString(eventId);
+		return service.findByEvent(idUuid);
 	}
 
-	@PutMapping(value = "/workshop-update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseObject> updateWorkshop(
-			@Valid @RequestPart("workshopData") WorkshopDto workshopDto,
-			@RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
-
-		if (imageFile != null) {
-			workshopDto.setImageFile(imageFile);
+	@PostMapping(value = "/workshops/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> saveWorkShop(@RequestPart("workshop") String workshop,
+			@RequestPart("speakerImage") MultipartFile speakerImage,
+			@RequestPart("workshopImage") MultipartFile worshopImage) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			var workshopDto = objectMapper.readValue(workshop, CreateWorkShopDto.class);
+			workshopDto.setSpeakerImage(speakerImage);
+			workshopDto.setWorkshopImage(worshopImage);
+			return service.saveWorkShop(workshopDto);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new ResponseObject("Error al procesar la solicitud", TypeResponse.ERROR),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return service.update(workshopDto);
 	}
 
 	// este eliminar es un eliminar fisico asi que hay que tener cuidado

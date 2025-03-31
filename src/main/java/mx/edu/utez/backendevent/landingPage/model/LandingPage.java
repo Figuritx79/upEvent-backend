@@ -43,7 +43,6 @@ public class LandingPage {
 	private String slug;
 
 	@OneToOne
-	@JsonIgnore
 	@JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false)
 	private Event event;
 
