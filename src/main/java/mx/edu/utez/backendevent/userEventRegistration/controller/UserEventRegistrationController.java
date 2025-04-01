@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.security.PermitAll;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUserDto;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUserMovilDto;
 import mx.edu.utez.backendevent.userEventRegistration.service.RegisterEventService;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
@@ -27,6 +28,11 @@ public class UserEventRegistrationController {
 	@PermitAll
 	public ResponseEntity<ResponseObject> saveRegistration(@RequestBody RegisterEventUserDto dto) {
 		return registerEventService.registerUserEvent(dto);
+	}
+
+	@PostMapping("/event-register/movil")
+	public ResponseEntity<ResponseObject> saveRegistrationMovil(@RequestBody RegisterEventUserMovilDto dto) {
+		return registerEventService.registerUserEventMovil(dto);
 	}
 
 }

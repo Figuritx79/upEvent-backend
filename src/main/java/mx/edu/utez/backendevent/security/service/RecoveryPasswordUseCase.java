@@ -33,81 +33,26 @@ public class RecoveryPasswordUseCase {
 			  <title>Recovery Password</title>
 			</head>
 
-			<body>
-			  <div class="image">
-				<img src="https://res.cloudinary.com/dt9d7lbhg/image/upload/v1742350041/Group_147_kquzlp.svg" alt="">
+			<body style="background: #0D0D0D; color: #F2F2F2; box-sizing: border-box;">
+			  <div class="image" style="position: absolute; top: 0px;">
+			    <img src="https://res.cloudinary.com/dt9d7lbhg/image/upload/v1742350041/Group_147_kquzlp.svg" alt="">
 			  </div>
-			  <main>
-				<section>
-				  <h1>Recuperación de Contraseña</h1>
-				  <article>
-					<p>Hemos recibido una solicitud para restablecer tu contraseña. Si no realizaste esta solicitud, puedes ignorar
-					  este mensaje.</p>
-					<p>Para restablecer tu contraseña, haz clic en el botón de abajo.</p>
-				  </article>
-				  <div>
-					<a href="%s">Restablecer Contraseña</a>
-				  </div>
-				</section>
+			  <main style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;">
+			    <section>
+			      <h1 style="text-align: center;">Recuperación de Contraseña</h1>
+			      <article style="display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
+			        <p>Hemos recibido una solicitud para restablecer tu contraseña. Si no realizaste esta solicitud, puedes ignorar este mensaje.</p>
+			        <p>Para restablecer tu contraseña, haz clic en el botón de abajo.</p>
+			      </article>
+			      <div style="display: flex; justify-content: center; align-items: center;">
+			        <a href="%s" style="color: #F2F2F2; font-weight: bold; text-decoration: none; background: #007599; padding: 8px; border-radius: 10px; transition: all .3s ease-in-out; box-shadow: 0px 10px 15px -3px rgba(38, 169, 217, .4);" onmouseover="this.style.background='#009CCC'; this.style.transform='scale(1.1)';" onmouseout="this.style.background='#007599'; this.style.transform='scale(1)';">Restablecer Contraseña</a>
+			      </div>
+			    </section>
 			  </main>
 			</body>
-			<style>
-			  body {
-				background: #0D0D0D;
-				color: #F2F2F2;
-				box-sizing: border-box;
-			  }
-
-			  main {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 100vh;
-				width: 100vw;
-			  }
-
-			  h1 {
-				text-align: center;
-			  }
-
-			  article {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				flex-direction: column;
-				text-align: center;
-			  }
-
-			  div {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			  }
-
-			  a {
-				color: #F2F2F2;
-				font-weight: bold;
-				text-decoration: none;
-				background: #007599;
-				padding: 8px;
-				border-radius: 10px;
-				transition: all .3s ease-in-out;
-				box-shadow: 0px 10px 15px -3px rgba(38, 169, 217, .4);
-			  }
-
-			  a:hover {
-				background: #009CCC;
-				transform: scale(1.1);
-			  }
-
-			  .image {
-				position: absolute;
-				top: 0px;
-			  }
-			</style>
 
 			</html>
-			""";
+						""";
 
 	@Autowired
 	public RecoveryPasswordUseCase(CreateTokenUseCase createTokenUseCase, UserRepository repository,
