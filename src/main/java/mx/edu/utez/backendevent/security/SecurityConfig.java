@@ -37,15 +37,16 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
 								"/api/auth/recovery-password", "/api/token/valid", "/api/auth/reset-password",
 								"/api/user/checkers", "/api/landing-page/landing/**", "/api/workshop/event/**",
-								"/api/registration/**")
+								"/api/registration/**", "/api/user/profile")
 						.permitAll()
-						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
+						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**", "/api/user/profile")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**")
+						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**",
+								"/api/user/profile")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						.requestMatchers("/api/event/events", "/api/event/events/**")
 						.hasRole("NORMAL")
-						.requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**")
+						.requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**", "/api/user/profile")
 						.hasAnyAuthority("CHECADOR")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

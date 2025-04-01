@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.user.model.dto.CreateEventAdminDto;
 import mx.edu.utez.backendevent.user.service.CreateAdminEvent;
 import mx.edu.utez.backendevent.user.service.UserService;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +53,11 @@ public class UserController {
 	@PermitAll
 	public ResponseEntity<ResponseObject> registerAdminEvent(@Valid @RequestBody CreateEventAdminDto adminDto) {
 		return createAdminEvent.registerAdmin(adminDto);
+	}
+
+	@PostMapping("/profile")
+	public ResponseEntity<ResponseObject> profile(@RequestBody EmailDto dto) {
+		return service.profile(dto);
 	}
 
 }
