@@ -29,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query(value = "SELECT u.name, u.lastname, u.email, u.phone FROM user u WHERE id_role = 4", nativeQuery = true)
 	public List<CheckerDto> findCheckers();
 
+	public Optional<User> findByName(String name);
+
 }

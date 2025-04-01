@@ -127,4 +127,17 @@ public class User {
 		this.role = role;
 	}
 
+	public User(String name, String lastname, Date birthdDate, String email, String password, String residence,
+			String companyName, Gender gender, Role role) {
+		this.name = name;
+		this.lastname = lastname;
+		this.birthdDate = birthdDate;
+		this.email = email;
+		this.password = password;
+		this.residence = residence;
+		this.companyName = companyName;
+		this.gender = gender;
+		this.role = role;
+	}
+
 }
