@@ -41,7 +41,7 @@ public class SecurityConfig {
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**")
+						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**","/api/user/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						.requestMatchers("/api/event/events", "/api/event/events/**", "/api/auth/**", "/api/user/**")
 						.hasAnyAuthority("NORMAL")
