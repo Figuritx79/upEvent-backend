@@ -127,14 +127,23 @@ public class WorkshopService {
 	// es que hacemos ese eliminado
 	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
-		if (!repository.existsById(id)) {
+		Optional<Workshop> optionalWorkshop = repository.findById(id);
+
+		if (optionalWorkshop.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("Taller no encontrado", null, TypeResponse.WARN),
-					HttpStatus.NOT_FOUND);
+					HttpStatus.NOT_FOUND
+			);
 		}
-		repository.deleteById(id);
+
+		Workshop workshop = optionalWorkshop.get();
+		workshop.setStatus(!workshop.isStatus());
+		repository.save(workshop);
+
 		return new ResponseEntity<>(
-				new ResponseObject("Taller eliminado exitosamente", null, TypeResponse.SUCCESS),
-				HttpStatus.OK);
+				new ResponseObject("Estado actualizado", workshop, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
 	}
+
 }

@@ -145,7 +145,8 @@ public class EventService {
 				HttpStatus.OK);
 	}
 
-	@Transactional(rollbackFor = { SQLException.class })
+
+	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
 		Optional<Event> optionalEvent = eventrepository.findById(id);
 		if (optionalEvent.isEmpty()) {
@@ -153,20 +154,14 @@ public class EventService {
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
 					HttpStatus.NOT_FOUND);
 		}
+
 		Event event = optionalEvent.get();
-
-		if (!event.getWorkshops().isEmpty()) {
-			return new ResponseEntity<>(
-					new ResponseObject("No se puede desactivar el evento porque tiene talleres asociados", null,
-							TypeResponse.ERROR),
-					HttpStatus.BAD_REQUEST);
-		}
-
-		event.setStatus(false);
+		event.setStatus(!event.isStatus());
 		eventrepository.save(event);
-
 		return new ResponseEntity<>(
-				new ResponseObject("Evento desactivado (eliminado lógico)", event, TypeResponse.SUCCESS),
-				HttpStatus.OK);
+				new ResponseObject("Estado actualizado", event, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+
 	}
 }
