@@ -1,7 +1,5 @@
 package mx.edu.utez.backendevent.userEventRegistration.model.dto;
 
-import java.util.UUID;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,13 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RegisterEventUserMovilDto {
+public class EmailDto {
 	@Email
 	@NotBlank
+	@NotNull
 	@NotEmpty
-	@NotNull
 	private String email;
-
-	@NotNull
-	private UUID idEvent;
 }

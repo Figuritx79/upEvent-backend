@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.security.PermitAll;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUserDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUserMovilDto;
 import mx.edu.utez.backendevent.userEventRegistration.service.RegisterEventService;
+import mx.edu.utez.backendevent.userEventRegistration.service.UserEventRegistratationService;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/registration")
 public class UserEventRegistrationController {
 	private RegisterEventService registerEventService;
+	private UserEventRegistratationService registratationService;
 
 	@Autowired
-	public UserEventRegistrationController(RegisterEventService registerEventService) {
+	public UserEventRegistrationController(RegisterEventService registerEventService,
+			UserEventRegistratationService registratationService) {
 		this.registerEventService = registerEventService;
+		this.registratationService = registratationService;
 	}
 
 	@PostMapping("/event-register")
@@ -33,6 +38,11 @@ public class UserEventRegistrationController {
 	@PostMapping("/event-register/movil")
 	public ResponseEntity<ResponseObject> saveRegistrationMovil(@RequestBody RegisterEventUserMovilDto dto) {
 		return registerEventService.registerUserEventMovil(dto);
+	}
+
+	@PostMapping("/own")
+	public ResponseEntity<ResponseObject> registeredEventUser(@RequestBody EmailDto email) {
+		return registratationService.eventRegistered(email.getEmail());
 	}
 
 }

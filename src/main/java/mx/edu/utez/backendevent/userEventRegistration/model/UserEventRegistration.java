@@ -11,6 +11,8 @@ import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistratio
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "user_event_registration")
 @Getter
@@ -24,6 +26,7 @@ public class UserEventRegistration {
 
 	@ManyToOne
 	@MapsId("idUser")
+	@JsonIgnore
 	@JoinColumn(name = "id_user", nullable = false)
 	private User user;
 
@@ -33,7 +36,7 @@ public class UserEventRegistration {
 	private Event event;
 
 	@Column(name = "status", columnDefinition = "TINYINT DEFAULT 1")
-	private boolean status;
+	private boolean status = true;
 
 	@Column(name = "created_at", nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp createdAt;
