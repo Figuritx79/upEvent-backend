@@ -33,9 +33,16 @@ public class UserWorkshopRegistration {
 	@JoinColumn(name = "id_event", nullable = false)
 	private Workshop workshop;
 
-	@Column(name = "status")
-	private boolean status;
+	@Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
+	private boolean status = true;
 
-	@Column(name = "created_at", nullable = false)
+	@Column(name = "created_at", nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp createdAt;
+
+	public UserWorkshopRegistration(UserWorkshopRegistrationId id, User user, Workshop workshop) {
+		this.id = id;
+		this.user = user;
+		this.workshop = workshop;
+	}
+
 }

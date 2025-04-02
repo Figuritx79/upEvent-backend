@@ -4,11 +4,19 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserWorkshopRegistrationId implements Serializable {
 
 	private UUID idUser;
 	private UUID idEvent;
-
 
 	public UUID getIdUser() {
 		return idUser;
@@ -28,8 +36,10 @@ public class UserWorkshopRegistrationId implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		UserWorkshopRegistrationId that = (UserWorkshopRegistrationId) o;
 		return Objects.equals(idUser, that.idUser) && Objects.equals(idEvent, that.idEvent);
 	}

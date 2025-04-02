@@ -11,6 +11,8 @@ import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUse
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterEventUserMovilDto;
 import mx.edu.utez.backendevent.userEventRegistration.service.RegisterEventService;
 import mx.edu.utez.backendevent.userEventRegistration.service.UserEventRegistratationService;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.CreateUserWorkshopDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.service.UserWorshopRegister;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserEventRegistrationController {
 	private RegisterEventService registerEventService;
 	private UserEventRegistratationService registratationService;
+	private UserWorshopRegister registerWorkshopService;
 
 	@Autowired
 	public UserEventRegistrationController(RegisterEventService registerEventService,
-			UserEventRegistratationService registratationService) {
+			UserEventRegistratationService registratationService, UserWorshopRegister registerWorkshopService) {
 		this.registerEventService = registerEventService;
 		this.registratationService = registratationService;
+		this.registerWorkshopService = registerWorkshopService;
 	}
 
 	@PostMapping("/event-register")
@@ -43,6 +47,11 @@ public class UserEventRegistrationController {
 	@PostMapping("/own")
 	public ResponseEntity<ResponseObject> registeredEventUser(@RequestBody EmailDto email) {
 		return registratationService.eventRegistered(email.getEmail());
+	}
+
+	@PostMapping("/workshop-register")
+	public ResponseEntity<ResponseObject> registerWorkShopUser(@RequestBody CreateUserWorkshopDto dto) {
+		return registerWorkshopService.saveRegistrationWorkShop(dto);
 	}
 
 }
