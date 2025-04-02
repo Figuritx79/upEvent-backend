@@ -8,6 +8,7 @@ import mx.edu.utez.backendevent.event.model.EventDto;
 import mx.edu.utez.backendevent.event.model.EventRepository;
 import mx.edu.utez.backendevent.event.model.dtos.CreateEventDto;
 import mx.edu.utez.backendevent.user.model.UserRepository;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,13 @@ public class EventService {
 	}
 
 	@Transactional(readOnly = true)
-	public ResponseEntity<ResponseObject> findMyOwnEvents(UUID admin) {
-		var events = eventrepository.findByAdminId(admin);
+	public ResponseEntity<ResponseObject> findMyOwnEvents(EmailDto admin) {
+		var existUser = userRepository.findByEmail(admin.getEmail());
+		if (!existUser.isPresent()) {
+			return new ResponseEntity<>(new ResponseObject("No existe ese admin", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		var events = eventrepository.findByAdminId(existUser.get().getId());
 		return new ResponseEntity<>(new ResponseObject("Tus eventos", events, TypeResponse.SUCCESS), HttpStatus.OK);
 	}
 
@@ -145,7 +151,6 @@ public class EventService {
 				HttpStatus.OK);
 	}
 
-
 	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
 		Optional<Event> optionalEvent = eventrepository.findById(id);
@@ -160,8 +165,7 @@ public class EventService {
 		eventrepository.save(event);
 		return new ResponseEntity<>(
 				new ResponseObject("Estado actualizado", event, TypeResponse.SUCCESS),
-				HttpStatus.OK
-		);
+				HttpStatus.OK);
 
 	}
 }

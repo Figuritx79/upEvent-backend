@@ -7,6 +7,7 @@ import mx.edu.utez.backendevent.event.model.EventDto;
 import mx.edu.utez.backendevent.event.model.dtos.CreateEventDto;
 import mx.edu.utez.backendevent.event.service.EventService;
 import mx.edu.utez.backendevent.user.model.dto.CreateEventAdminDto;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,14 +35,13 @@ public class EventController {
 		return service.findAll();
 	}
 
-	@GetMapping("/own/{admin}")
-	public ResponseEntity<ResponseObject> findMyOwnEvents(@PathVariable String admin) {
-		if (admin.isEmpty()) {
+	@PostMapping("/own")
+	public ResponseEntity<ResponseObject> findMyOwnEvents(@RequestBody EmailDto dto) {
+		if (dto == null) {
 			return new ResponseEntity<>(new ResponseObject("No esta el admin", TypeResponse.WARN),
 					HttpStatus.BAD_REQUEST);
 		}
-		var id = UUID.fromString(admin);
-		return service.findMyOwnEvents(id);
+		return service.findMyOwnEvents(dto);
 	}
 
 	@GetMapping("/events/{id}")
