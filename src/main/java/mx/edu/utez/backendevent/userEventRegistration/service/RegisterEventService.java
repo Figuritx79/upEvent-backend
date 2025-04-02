@@ -68,6 +68,9 @@ public class RegisterEventService {
 			<div>
 			  <img src="{url}" alt="qr" style="width: 250px; height: 250px; display: block; margin: 20px auto;">
 			</div>
+			<div>
+				<p>📱 Para inscribirte a los diferentes taller por favor usar la app movil. Esto te facilitarar la inscripcion a los diferentes tallers y los diferenetes eventos de la plataforma 😄 </p>
+			</div>
 				</body>
 				</html>
 				""";
@@ -108,7 +111,7 @@ public class RegisterEventService {
 		var role = new Role(3);
 		var userRegister = new User(eventUserDto.getName(), eventUserDto.getLastname(),
 				eventUserDto.getBirthDate(), eventUserDto.getEmail(), passwordEncoder, eventUserDto.getResidence(),
-				eventUserDto.getCompanyName(), gender.get(), role);
+				gender.get(), role);
 
 		var user = userRepository.saveAndFlush(userRegister);
 
@@ -143,7 +146,7 @@ public class RegisterEventService {
 				.replace("{url}", "data:image/png;base64," + qrString);
 		sender.SendMail(searchNewUser.get().getEmail(), "¡Inscripción confirmada !", customHtml);
 		return new ResponseEntity<>(
-				new ResponseObject("Se hizo el registro al taller", TypeResponse.SUCCESS),
+				new ResponseObject("Se hizo el registro al evento", TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
 	}
 

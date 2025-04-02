@@ -47,11 +47,6 @@ public class RegisterEventUserDto {
 	@NotBlank(groups = { Register.class })
 	private String residence;
 
-	@NotNull(groups = { Register.class })
-	@NotEmpty(groups = { Register.class })
-	@NotBlank(groups = { Register.class })
-	private String companyName;
-
 	public interface Register {
 
 	}
