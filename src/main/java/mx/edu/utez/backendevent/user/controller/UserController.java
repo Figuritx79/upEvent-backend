@@ -52,7 +52,6 @@ public class UserController {
 	}
 
 	@PostMapping("/register-admin-event")
-	@PermitAll
 	public ResponseEntity<ResponseObject> registerAdminEvent(@Valid @RequestBody CreateEventAdminDto adminDto) {
 		return createAdminEvent.registerAdmin(adminDto);
 	}

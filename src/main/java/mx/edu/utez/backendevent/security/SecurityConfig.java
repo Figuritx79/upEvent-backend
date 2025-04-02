@@ -34,14 +34,24 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth
+						// .requestMatchers("/api/auth/login", "/api/up",
+						// "/api/user/register-admin-event",
+						// "/api/auth/recovery-password", "/api/token/valid",
+						// "/api/auth/reset-password",
+						// "/api/user/checkers", "/api/landing-page/landing/**",
+						// "/api/workshop/event/**",
+						// "/api/registration/**")
+						// .permitAll()
 						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
-								"/api/auth/recovery-password", "/api/token/valid", "/api/auth/reset-password",
-								"/api/user/checkers", "/api/landing-page/landing/**", "/api/workshop/event/**",
-								"/api/registration/**", "/api/user/profile")
+								"/api/auth/recovery-password", "/api/auth/reset-password",
+								"/api/landing-page/landing/**", "/api/workshop/event/**",
+								"/api/registration/event-register", "/api/event/events")
 						.permitAll()
-						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**", "/api/user/profile")
+						.requestMatchers("/api/intersection/suscribe")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**")
+						.requestMatchers("/api/event/own", "/api/landing-page/landing/create/",
+								"/api/workshop/workshops/create", "/api/event/event", " /api/event/events-update",
+								"/api/event/events-delete/**", "/api/landing-page/landing/create/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						// .requestMatchers("/api/event/events", "/api/event/events/**",
 						// "/api/user/update")
@@ -50,8 +60,12 @@ public class SecurityConfig {
 						// "/api/user/profile",
 						// "/api/user/update")
 						// .hasAnyAuthority("CHECADOR")
-						.requestMatchers("/api/user/profile", "/api/event/events**", "api/user/update",
-								"/api/user/workshop/**", "/api/qr/send", "/api/event/events")
+						.requestMatchers("/api/user/profile", "/api/event/events/**", "/api/user/update",
+								"/api/qr/send",
+								"/api/registration/event-register/movil ", "/api/registration/own",
+								"/api/registration/workshop-register", " /api/workshop/workshops",
+								"/api/workshop/workshop/**", " /api/workshop/event/**", "/api/workshop/workshops",
+								"/api/workshop/event/**")
 						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENT")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -60,7 +74,7 @@ public class SecurityConfig {
 								.configurationSource(request -> {
 									CorsConfiguration config = new CorsConfiguration();
 									config.setAllowCredentials(true);
-									config.addAllowedOrigin("exp://192.168.100.47:8081");
+									config.addAllowedOrigin("http://localhost:5173");
 									config.addAllowedHeader("*");
 									config.addAllowedMethod("*");
 									return config;
