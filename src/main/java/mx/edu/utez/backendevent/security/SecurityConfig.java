@@ -41,14 +41,18 @@ public class SecurityConfig {
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe", "/api/user/info/**", "/api/user/profile")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**",
-								"/api/user/profile")
+						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
-						.requestMatchers("/api/event/events", "/api/event/events/**", "/api/user/update")
-						.hasRole("NORMAL")
-						.requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**", "/api/user/profile",
-								"/api/user/update")
-						.hasAnyAuthority("CHECADOR")
+						// .requestMatchers("/api/event/events", "/api/event/events/**",
+						// "/api/user/update")
+						// .hasRole("NORMAL")
+						// .requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**",
+						// "/api/user/profile",
+						// "/api/user/update")
+						// .hasAnyAuthority("CHECADOR")
+						.requestMatchers("/api/user/profile", "/api/event/events**", "api/user/update",
+								"/api/user/workshop/**", "/api/qr/send", "/api/event/events")
+						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENT")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.cors(
