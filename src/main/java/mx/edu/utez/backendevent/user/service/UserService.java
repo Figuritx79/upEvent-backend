@@ -1,16 +1,19 @@
 package mx.edu.utez.backendevent.user.service;
 
+import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mx.edu.utez.backendevent.security.controller.AuthController;
 import mx.edu.utez.backendevent.security.service.AuthService;
 import mx.edu.utez.backendevent.user.model.UserRepository;
+import mx.edu.utez.backendevent.user.model.dto.UpdateMovilUserDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
@@ -25,10 +28,13 @@ public class UserService {
 	@ReadOnlyProperty
 	private UserRepository repository;
 
+	private PasswordEncoder encoder;
+
 	@Autowired
-	public UserService(UserRepository repository, AuthService authService) {
+	public UserService(UserRepository repository, AuthService authService, PasswordEncoder encoder) {
 		this.repository = repository;
 		this.authService = authService;
+		this.encoder = encoder;
 	}
 
 	@Transactional(readOnly = true)
@@ -72,6 +78,30 @@ public class UserService {
 		}
 		log.info("Existe el usuario" + dto.getEmail());
 		return new ResponseEntity<>(new ResponseObject("Profile", existUser.get(), TypeResponse.SUCCESS),
+				HttpStatus.OK);
+	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> updateInfo(UpdateMovilUserDto dto) {
+		var existeUser = repository.findByEmail(dto.getEmail());
+
+		if (!existeUser.isPresent()) {
+			return new ResponseEntity<>(new ResponseObject("Usuario no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+
+		var user = existeUser.get();
+
+		if (dto.getPhone() != null) {
+			user.setPhone(dto.getPhone());
+		}
+		if (dto.getPassword() != null) {
+			user.setPassword(encoder.encode(dto.getPassword()));
+		}
+
+		repository.save(user);
+
+		return new ResponseEntity<>(new ResponseObject("Usuario actualizado correctamente", TypeResponse.SUCCESS),
 				HttpStatus.OK);
 	}
 }

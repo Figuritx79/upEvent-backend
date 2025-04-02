@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.user.model.dto.CreateEventAdminDto;
+import mx.edu.utez.backendevent.user.model.dto.UpdateMovilUserDto;
 import mx.edu.utez.backendevent.user.service.CreateAdminEvent;
 import mx.edu.utez.backendevent.user.service.UserService;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -58,6 +60,11 @@ public class UserController {
 	@PostMapping("/profile")
 	public ResponseEntity<ResponseObject> profile(@RequestBody EmailDto dto) {
 		return service.profile(dto);
+	}
+
+	@PatchMapping("/update")
+	public ResponseEntity<ResponseObject> updateMoviInfo(@Valid @RequestBody UpdateMovilUserDto dto) {
+		return service.updateInfo(dto);
 	}
 
 }

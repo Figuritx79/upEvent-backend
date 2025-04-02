@@ -44,9 +44,10 @@ public class SecurityConfig {
 						.requestMatchers("/api/event/**", "/api/landing-page/**", "/api/workshop/**",
 								"/api/user/profile")
 						.hasAnyAuthority("ADMIN_EVENTO")
-						.requestMatchers("/api/event/events", "/api/event/events/**")
+						.requestMatchers("/api/event/events", "/api/event/events/**", "/api/user/update")
 						.hasRole("NORMAL")
-						.requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**", "/api/user/profile")
+						.requestMatchers("/qr/send", "/api/event/events", "/api/event/events/**", "/api/user/profile",
+								"/api/user/update")
 						.hasAnyAuthority("CHECADOR")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -55,7 +56,7 @@ public class SecurityConfig {
 								.configurationSource(request -> {
 									CorsConfiguration config = new CorsConfiguration();
 									config.setAllowCredentials(true);
-									config.addAllowedOrigin("http://localhost:5173");
+									config.addAllowedOrigin("exp://192.168.100.47:8081");
 									config.addAllowedHeader("*");
 									config.addAllowedMethod("*");
 									return config;
