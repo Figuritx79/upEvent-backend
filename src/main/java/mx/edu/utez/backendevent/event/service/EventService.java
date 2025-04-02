@@ -45,7 +45,7 @@ public class EventService {
 			return new ResponseEntity<>(new ResponseObject("No existe ese admin", TypeResponse.WARN),
 					HttpStatus.NOT_FOUND);
 		}
-		var events = eventrepository.findByAdminId(existUser.get().getId());
+		var events = eventrepository.findByAdmin(existUser.get());
 		return new ResponseEntity<>(new ResponseObject("Tus eventos", events, TypeResponse.SUCCESS), HttpStatus.OK);
 	}
 

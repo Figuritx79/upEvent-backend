@@ -22,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserEventRegistration {
 
 	@EmbeddedId
+	@JsonIgnore
 	private UserEventRegistrationId id;
 
 	@ManyToOne
 	@MapsId("idUser")
-	@JsonIgnore
 	@JoinColumn(name = "id_user", nullable = false)
 	private User user;
 

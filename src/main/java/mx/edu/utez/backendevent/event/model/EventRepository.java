@@ -10,6 +10,7 @@ import mx.edu.utez.backendevent.event.model.dtos.MyOwnEventDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import mx.edu.utez.backendevent.user.model.User;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
@@ -18,6 +19,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
 	List<Event> findAllByStatusTrue();
 
-	@Query(value = "SELECT e.name, e.description, e.start_date, e.end_date ,e.front_page FROM event e  INNER JOIN user u  ON  e.id_admin = u.id WHERE u.id = ?1", nativeQuery = true)
-	List<MyOwnEventDto> findByAdminId(@Param("id") UUID id);
+	// @Query(value = "SELECT * FROM event e INNER JOIN user u ON e.id_admin = u.id
+	// WHERE u.id = ?1", nativeQuery = true)
+	// List<Event> findByAdminId(@Param("id") UUID id);
+
+	List<Event> findByAdmin(User admin);
 }

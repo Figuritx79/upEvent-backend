@@ -1,6 +1,9 @@
 package mx.edu.utez.backendevent.event.model.dtos;
 
 import java.sql.Date;
+import java.util.UUID;
+
+import org.hibernate.type.descriptor.jdbc.BinaryJdbcType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,15 +16,16 @@ import lombok.Setter;
 @Setter
 public class MyOwnEventDto {
 
-	String name;
+	private BinaryJdbcType id;
+	private String name;
 
-	String description;
+	private String description;
 
-	Date startDate;
+	private Date startDate;
 
-	Date endDate;
+	private Date endDate;
 
-	String frontPage;
+	private String frontPage;
 
 	// String getName();
 
