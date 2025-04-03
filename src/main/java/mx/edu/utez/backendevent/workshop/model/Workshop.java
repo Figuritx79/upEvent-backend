@@ -19,7 +19,10 @@ import org.hibernate.type.SqlTypes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "workshop")
+@Table(name = "workshop", indexes = {
+		@Index(name = "workshop_name", columnList = "name"),
+		@Index(name = "workshop_image", columnList = "workshop_image")
+})
 @Getter
 @Setter
 @AllArgsConstructor

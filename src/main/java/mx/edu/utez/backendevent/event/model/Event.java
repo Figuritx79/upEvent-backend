@@ -18,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "event")
+@Table(name = "event", indexes = {
+		@Index(name = "event_name", columnList = "name"),
+		@Index(name = "event_frontPage", columnList = "front_page")
+})
 @Getter
 @Setter
 @AllArgsConstructor
