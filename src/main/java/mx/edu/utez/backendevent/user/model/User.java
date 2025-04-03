@@ -139,4 +139,13 @@ public class User {
 		this.role = role;
 	}
 
+	public User(String name, String lastname, String email, String password, String phone, Role role) {
+		this.name = name;
+		this.lastname = lastname;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.role = role;
+	}
+
 }

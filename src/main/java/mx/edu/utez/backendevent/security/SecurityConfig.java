@@ -51,7 +51,8 @@ public class SecurityConfig {
 						.hasAnyAuthority("SUPER_ADMIN")
 						.requestMatchers("/api/event/own", "/api/landing-page/landing/create/",
 								"/api/workshop/workshops/create", "/api/event/event", " /api/event/events-update",
-								"/api/event/events-delete/**", "/api/landing-page/landing/create/**")
+								"/api/event/events-delete/**", "/api/landing-page/landing/create/**",
+								"/api/checker/create")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						// .requestMatchers("/api/event/events", "/api/event/events/**",
 						// "/api/user/update")
@@ -65,7 +66,8 @@ public class SecurityConfig {
 								"/api/registration/event-register/movil ", "/api/registration/own",
 								"/api/registration/workshop-register", " /api/workshop/workshops",
 								"/api/workshop/workshop/**", " /api/workshop/event/**", "/api/workshop/workshops",
-								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned")
+								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
+								"/api/checker/own")
 						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

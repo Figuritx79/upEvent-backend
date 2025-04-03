@@ -16,6 +16,7 @@ import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 
 @Service
+@Transactional
 public class EventCheckerService {
 	private EventCheckerRepository eventCheckerRepository;
 
@@ -53,6 +54,29 @@ public class EventCheckerService {
 
 		return new ResponseEntity<>(new ResponseObject("Eventos Asignados", assignedEvents, TypeResponse.SUCCESS),
 				HttpStatus.OK);
+	}
+
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> ownChekers(EmailDto dto) {
+		var existeChecker = userRepository.findByEmail(dto.getEmail());
+		if (!existeChecker.isPresent()) {
+			log.info("Trato de visualizar a sus checadores" + dto.getEmail());
+			return new ResponseEntity<>(new ResponseObject("No tienes cuenta", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+
+		var myCheckers = eventCheckerRepository.findByAssignedBy(existeChecker.get());
+
+		if (myCheckers.isEmpty()) {
+			log.info("No tiene checadores" + dto.getEmail());
+			return new ResponseEntity<>(new ResponseObject("No tienes checadores disponibles", TypeResponse.WARN),
+					HttpStatus.NO_CONTENT);
+		}
+		log.info("Eventos del checador" + dto.getEmail());
+
+		return new ResponseEntity<>(new ResponseObject("Checadores disponibles", myCheckers, TypeResponse.SUCCESS),
+				HttpStatus.OK);
+
 	}
 
 }

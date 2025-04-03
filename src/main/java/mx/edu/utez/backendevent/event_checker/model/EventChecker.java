@@ -44,6 +44,7 @@ public class EventChecker {
 	private User checker;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "assigned_by", nullable = false)
 	private User assignedBy;
 }

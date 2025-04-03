@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import mx.edu.utez.backendevent.event_checker.model.dto.CheckerRegisterDto;
 import mx.edu.utez.backendevent.event_checker.service.EventCheckerRegister;
 import mx.edu.utez.backendevent.event_checker.service.EventCheckerService;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
@@ -29,6 +30,16 @@ public class EventCheckerController {
 	@PostMapping("/assigned")
 	public ResponseEntity<ResponseObject> assignedEvents(@Valid @RequestBody EmailDto dto) {
 		return this.eventCheckerService.assignedEvents(dto);
+	}
+
+	@PostMapping("/own")
+	public ResponseEntity<ResponseObject> ownCheckers(@Valid @RequestBody EmailDto dto) {
+		return this.eventCheckerService.ownChekers(dto);
+	}
+
+	@PostMapping("/create")
+	public ResponseEntity<ResponseObject> saveChecker(@Valid @RequestBody CheckerRegisterDto dto) {
+		return eventCheckerRegister.saveChecker(dto);
 	}
 
 }

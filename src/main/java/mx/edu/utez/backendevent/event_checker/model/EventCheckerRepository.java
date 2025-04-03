@@ -10,4 +10,5 @@ public interface EventCheckerRepository extends JpaRepository<EventChecker, Even
 
 	List<EventChecker> findByChecker(User checker);
 
+	List<EventChecker> findByAssignedBy(User assignedBy);
 }
