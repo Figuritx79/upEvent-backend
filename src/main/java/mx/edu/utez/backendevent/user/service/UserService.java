@@ -92,7 +92,7 @@ public class UserService {
 
 		var user = existeUser.get();
 
-		if (dto.getPassword() == null && dto.getPassword() == null) {
+		if (dto.getPassword() == null && dto.getPhone() == null) {
 			return new ResponseEntity<>(new ResponseObject("No hay datos quea actualizar", TypeResponse.WARN),
 					HttpStatus.BAD_REQUEST);
 		}
