@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.event.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
@@ -50,13 +51,22 @@ public class EventController {
 	}
 
 	@PostMapping(value = "/event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseObject> createEvet(@RequestPart("eventDto") String eventDtoStr,
-			@RequestPart("frontPage") MultipartFile frontPage) throws Exception {
+	public ResponseEntity<ResponseObject> createEvent(
+			@RequestPart("eventDto") String eventDtoStr,
+			@RequestPart("frontPage") MultipartFile frontPage) throws JsonProcessingException {
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		CreateEventDto eventDto = objectMapper.readValue(eventDtoStr, CreateEventDto.class);
-		if (frontPage != null) {
-			eventDto.setFrontPage(frontPage);
+
+		// Validación adicional
+		if (frontPage.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("La imagen es requerida", TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST
+			);
 		}
+
+		eventDto.setFrontPage(frontPage);
 		return service.save(eventDto);
 	}
 

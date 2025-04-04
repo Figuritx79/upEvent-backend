@@ -19,9 +19,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
 	List<Event> findAllByStatusTrue();
 
-	// @Query(value = "SELECT * FROM event e INNER JOIN user u ON e.id_admin = u.id
-	// WHERE u.id = ?1", nativeQuery = true)
-	// List<Event> findByAdminId(@Param("id") UUID id);
-
 	List<Event> findByAdmin(User admin);
 }

@@ -45,14 +45,14 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
 								"/api/auth/recovery-password", "/api/auth/reset-password",
 								"/api/landing-page/landing/**", "/api/workshop/event/**",
-								"/api/registration/event-register", "/api/event/events")
+								"/api/registration/event-register", "/api/event/events","/api/event")
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe")
 						.hasAnyAuthority("SUPER_ADMIN")
 						.requestMatchers("/api/event/own", "/api/landing-page/landing/create/",
 								"/api/workshop/workshops/create", "/api/event/event", " /api/event/events-update",
 								"/api/event/events-delete/**", "/api/landing-page/landing/create/**",
-								"/api/checker/create")
+								"/api/checker/create", "api/event/**")
 						.hasAnyAuthority("ADMIN_EVENTO")
 						// .requestMatchers("/api/event/events", "/api/event/events/**",
 						// "/api/user/update")

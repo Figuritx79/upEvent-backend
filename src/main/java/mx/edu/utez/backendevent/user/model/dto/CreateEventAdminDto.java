@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,6 +46,8 @@ public class CreateEventAdminDto {
 	@NotNull(groups = { Insert.class }, message = "The name cant by null")
 	@NotEmpty(groups = { Insert.class }, message = "The name is mandatory")
 	private String password;
+
+	private MultipartFile multipartFile;
 
 	private interface Insert {
 
