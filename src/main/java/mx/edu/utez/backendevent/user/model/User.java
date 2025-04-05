@@ -44,31 +44,31 @@ public class User {
 	private UUID id;
 
 	@Column(name = "name", columnDefinition = "VARCHAR(50)", nullable = false, length = 50)
-	private String name;
+	public String name;
 
 	@Column(name = "lastname", columnDefinition = "VARCHAR(50)", nullable = false, length = 50)
-	private String lastname;
+	public String lastname;
 
 	@Column(name = "birth_date", nullable = true, columnDefinition = "DATE")
-	private Date birthdDate;
+	public Date birthdDate;
 
 	@Column(name = "email", nullable = false, unique = true, length = 50, columnDefinition = "VARCHAR(50)")
-	private String email;
+	public String email;
 
 	@Column(name = "password", nullable = false, length = 100, columnDefinition = "VARCHAR(100)")
 	private String password;
 
 	@Column(name = "phone", nullable = true, length = 10, columnDefinition = "VARCHAR(10)")
-	private String phone;
+	public String phone;
 
 	@Column(name = "residence", nullable = true, columnDefinition = "TINYTEXT")
-	private String residence;
+	public String residence;
 
 	@Column(name = "company_name", nullable = true, columnDefinition = "VARCHAR(40)", length = 40)
-	private String companyName;
+	public String companyName;
 
-	@Column(name = "status", nullable = false, columnDefinition = "BOOL DEFAULT 1")
-	private boolean status;
+	@Column(name = "status", nullable = false, columnDefinition = "BOOL DEFAULT TRUE")
+	public boolean status = true;
 
 	@ManyToOne
 	@JoinColumn(name = "id_gender", columnDefinition = "BIGINT")

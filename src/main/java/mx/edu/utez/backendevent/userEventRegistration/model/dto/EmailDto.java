@@ -14,9 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmailDto {
-	@Email
-	@NotBlank
-	@NotNull
-	@NotEmpty
+	@Email(message = "El correo debe ser válido")
+	@NotBlank(message = "El correo no puede estar vacío")
 	private String email;
 }

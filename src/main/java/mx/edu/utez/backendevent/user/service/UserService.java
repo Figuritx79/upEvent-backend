@@ -1,7 +1,9 @@
 package mx.edu.utez.backendevent.user.service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
+import mx.edu.utez.backendevent.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,4 +111,25 @@ public class UserService {
 		return new ResponseEntity<>(new ResponseObject("Usuario actualizado correctamente", TypeResponse.SUCCESS),
 				HttpStatus.OK);
 	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> toggleStatusByEmail(EmailDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getEmail());
+		if (!optionalUser.isPresent()) {
+			log.info("Usuario no encontrado con correo: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND
+			);
+		}
+		User user = optionalUser.get();
+		user.setStatus(!user.isStatus());
+		repository.save(user);
+		log.info("Estado del usuario {} cambiado a {}", dto.getEmail(), user.isStatus());
+		return new ResponseEntity<>(
+				new ResponseObject("Estado actualizado correctamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
 }

@@ -66,4 +66,9 @@ public class UserController {
 		return service.updateInfo(dto);
 	}
 
+	@PatchMapping("/status")
+	public ResponseEntity<ResponseObject> toggleStatusByEmail(@Valid @RequestBody EmailDto dto) {
+		return service.toggleStatusByEmail(dto);
+	}
+
 }
