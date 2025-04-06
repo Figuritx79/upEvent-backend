@@ -1,7 +1,11 @@
 package mx.edu.utez.backendevent.user.service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
+import mx.edu.utez.backendevent.user.model.User;
+import mx.edu.utez.backendevent.user.model.dto.UpdatePasswordDto;
+import mx.edu.utez.backendevent.user.model.dto.UpdateUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,4 +113,91 @@ public class UserService {
 		return new ResponseEntity<>(new ResponseObject("Usuario actualizado correctamente", TypeResponse.SUCCESS),
 				HttpStatus.OK);
 	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> toggleStatusByEmail(EmailDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getEmail());
+		if (!optionalUser.isPresent()) {
+			log.info("Usuario no encontrado con correo: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND
+			);
+		}
+		User user = optionalUser.get();
+		user.setStatus(!user.isStatus());
+		repository.save(user);
+		log.info("Estado del usuario {} cambiado a {}", dto.getEmail(), user.isStatus());
+		return new ResponseEntity<>(
+				new ResponseObject("Estado actualizado correctamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> updatePassword(UpdatePasswordDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getEmail());
+		if (!optionalUser.isPresent()) {
+			log.warn("Usuario no encontrado con email: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		if (!encoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+			log.warn("Contraseña actual incorrecta para usuario: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Contraseña actual incorrecta", TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST
+			);
+		}
+
+		user.setPassword(encoder.encode(dto.getNewPassword()));
+		repository.save(user);
+
+		log.info("Contraseña actualizada para usuario: {}", dto.getEmail());
+		return new ResponseEntity<>(
+				new ResponseObject("Contraseña actualizada exitosamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> updateProfile(UpdateUserDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getCurrentEmail());
+		if (!optionalUser.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		if (dto.getNewEmail() != null && !dto.getNewEmail().isEmpty()) {
+			user.setEmail(dto.getNewEmail());
+		}
+		if (dto.getName() != null && !dto.getName().isEmpty()) {
+			user.setName(dto.getName());
+		}
+		if (dto.getLastname() != null && !dto.getLastname().isEmpty()) {
+			user.setLastname(dto.getLastname());
+		}
+		if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+			user.setPhone(dto.getPhone());
+		}
+
+		repository.save(user);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Perfil actualizado exitosamente", user, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+
+
 }

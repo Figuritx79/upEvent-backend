@@ -20,12 +20,14 @@ public class CheckerDto extends UserDto {
 	private String lastname;
 	private String email;
 	private String phone;
+	private Boolean status;
 
-	private CheckerDto (String name, String lastname, String email, String phone) {
+	private CheckerDto (String name, String lastname, String email, String phone,Boolean status) {
 		this.name = name;
 		this.lastname = lastname;
 		this.email = email;
 		this.phone = phone;
+		this.status = status;
 
 	}
 

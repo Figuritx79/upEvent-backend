@@ -1,7 +1,16 @@
 package mx.edu.utez.backendevent.userWorkshopRegistration.service;
 
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import mx.edu.utez.backendevent.user.model.User;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.BasicWorkshopDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsByEmailDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +76,23 @@ public class UserWorshopRegister {
 		return new ResponseEntity<>(
 				new ResponseObject("Registro existoso al taller", registration, TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
+	}
+
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> getWorkshopsByUserEmail(String email) {
+		List<BasicWorkshopDto> workshops = registrationRepository.findWorkshopsByUserEmail(email);
+
+		if (workshops.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("No hay talleres inscritos", TypeResponse.ERROR),
+					HttpStatus.OK
+			);
+		}
+
+		return new ResponseEntity<>(
+				new ResponseObject("Talleres obtenidos", workshops, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
 	}
 
 }

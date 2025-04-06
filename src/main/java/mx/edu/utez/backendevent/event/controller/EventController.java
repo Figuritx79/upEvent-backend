@@ -58,7 +58,6 @@ public class EventController {
 		ObjectMapper objectMapper = new ObjectMapper();
 		CreateEventDto eventDto = objectMapper.readValue(eventDtoStr, CreateEventDto.class);
 
-		// Validación adicional
 		if (frontPage.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("La imagen es requerida", TypeResponse.ERROR),
@@ -75,7 +74,6 @@ public class EventController {
 		return service.update(eventDto);
 	}
 
-	// Este eliminar tambien es un eliminar fisico
 	@DeleteMapping("/events-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteEvent(@PathVariable UUID id) {
 		return service.deleteById(id);
