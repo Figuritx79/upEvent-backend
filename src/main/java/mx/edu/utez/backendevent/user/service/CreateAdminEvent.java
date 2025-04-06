@@ -42,7 +42,7 @@ public class CreateAdminEvent {
 		newAdminEvent.setPhone(adminDto.getPhone());
 		newAdminEvent.setRole(adminEventRole);
 
-		var createAdminEvent = repository.save(newAdminEvent);
+		var createAdminEvent = repository.saveAndFlush(newAdminEvent);
 
 		if (createAdminEvent == null) {
 			return new ResponseEntity<>(new ResponseObject(), HttpStatus.INTERNAL_SERVER_ERROR);

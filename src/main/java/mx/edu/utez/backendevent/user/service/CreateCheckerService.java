@@ -43,7 +43,7 @@ public class CreateCheckerService {
 		newChecker.setPhone(checkerDto.getPhone());
 		newChecker.setRole(checkerRole);
 		newChecker.setStatus(true);
-		var createdChecker = repository.save(newChecker);
+		var createdChecker = repository.saveAndFlush(newChecker);
 
 		if (createdChecker == null) {
 			return new ResponseEntity<>(

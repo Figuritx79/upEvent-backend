@@ -76,7 +76,7 @@ public class CreateParticipantService {
 			newParticipant.setRole(participantRole);
 			newParticipant.setStatus(true); // Activo por defecto
 
-			userRepository.save(newParticipant);
+			userRepository.saveAndFlush(newParticipant);
 
 			return new ResponseEntity<>(
 					new ResponseObject("Participante registrado exitosamente", TypeResponse.SUCCESS),
