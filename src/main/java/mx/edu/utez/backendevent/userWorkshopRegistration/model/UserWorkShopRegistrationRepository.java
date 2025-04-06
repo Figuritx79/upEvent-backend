@@ -12,16 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface UserWorkShopRegistrationRepository
 		extends JpaRepository<UserWorkshopRegistration, UserWorkshopRegistrationId> {
 
-	@Query("SELECT new mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.BasicWorkshopDto	(" +
-			"w.id, w.name, w.description, w.hour, w.image) " +
-			"FROM UserWorkshopRegistration uwr " +
-			"JOIN uwr.workshop w " +
-			"JOIN uwr.user u " +
-			"WHERE u.email = :email")
-	List<BasicWorkshopDto> findWorkshopsByUserEmail(@Param("email") String email);
-}
+		@Query("SELECT new mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.BasicWorkshopDto	(" +
+				"w.id, w.name, w.description, w.hour, w.image) " +
+				"FROM UserWorkshopRegistration uwr " +
+				"JOIN uwr.workshop w " +
+				"JOIN uwr.user u " +
+				"JOIN w.event e " +
+				"WHERE u.email = :email AND e.id = :idEvent")
+		List<BasicWorkshopDto> findWorkshopsByUserEmail(@Param("email") String email, @Param("idEvent") UUID idEvent);
+	}

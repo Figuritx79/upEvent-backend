@@ -79,8 +79,8 @@ public class UserWorshopRegister {
 	}
 
 	@Transactional(readOnly = true)
-	public ResponseEntity<ResponseObject> getWorkshopsByUserEmail(String email) {
-		List<BasicWorkshopDto> workshops = registrationRepository.findWorkshopsByUserEmail(email);
+	public ResponseEntity<ResponseObject> getWorkshopsByUserEmail(String email, UUID idEvent) {
+		List<BasicWorkshopDto> workshops = registrationRepository.findWorkshopsByUserEmail(email, idEvent);
 
 		if (workshops.isEmpty()) {
 			return new ResponseEntity<>(

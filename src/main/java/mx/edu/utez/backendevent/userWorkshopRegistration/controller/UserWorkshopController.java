@@ -2,6 +2,7 @@ package mx.edu.utez.backendevent.userWorkshopRegistration.controller;
 
 import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EventDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsByEmailDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.service.UserWorshopRegister;
 import mx.edu.utez.backendevent.util.ResponseObject;
@@ -24,9 +25,9 @@ public class UserWorkshopController {
 
 	@PostMapping("/my-workshops")
 	public ResponseEntity<ResponseObject> getMyWorkshops(
-			@Valid @RequestBody EmailDto dto
+			@Valid @RequestBody EventDto dto
 	) {
-		return userWorshopRegister.getWorkshopsByUserEmail(dto.getEmail());
+		return userWorshopRegister.getWorkshopsByUserEmail(dto.getEmail(), dto.getIdEvent());
 	}
 
 }
