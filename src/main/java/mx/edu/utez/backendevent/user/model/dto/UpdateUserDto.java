@@ -19,6 +19,8 @@ public class UpdateUserDto {
 	@Email(message = "El nuevo email debe ser válido")
 	private String newEmail;
 
+	private String companyName;
+
 	private String name;
 	private String lastname;
 	private String phone;

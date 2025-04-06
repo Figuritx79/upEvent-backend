@@ -189,8 +189,11 @@ public class UserService {
 		if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
 			user.setPhone(dto.getPhone());
 		}
+		if(dto.getCompanyName() != null && !dto.getCompanyName().isEmpty()) {
+			user.setCompanyName(dto.getCompanyName());
+		}
 
-		repository.save(user);
+		repository.saveAndFlush(user);
 
 		return new ResponseEntity<>(
 				new ResponseObject("Perfil actualizado exitosamente", user, TypeResponse.SUCCESS),
