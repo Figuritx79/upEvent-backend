@@ -20,6 +20,7 @@ import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistratio
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkShopRegistrationRepository;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkshopRegistration;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkshopRegistrationId;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.CreateUserWorkshopDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.WorkshopRepository;
