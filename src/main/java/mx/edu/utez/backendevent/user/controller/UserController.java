@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.user.controller;
 
+import mx.edu.utez.backendevent.user.model.dto.UpdatePasswordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,11 @@ public class UserController {
 	@PatchMapping("/status")
 	public ResponseEntity<ResponseObject> toggleStatusByEmail(@Valid @RequestBody EmailDto dto) {
 		return service.toggleStatusByEmail(dto);
+	}
+
+	@PatchMapping("/update-password")
+	public ResponseEntity<ResponseObject> updatePassword(@Valid @RequestBody UpdatePasswordDto dto) {
+		return service.updatePassword(dto);
 	}
 
 }

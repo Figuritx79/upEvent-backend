@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import mx.edu.utez.backendevent.user.model.User;
+import mx.edu.utez.backendevent.user.model.dto.UpdatePasswordDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,5 +132,38 @@ public class UserService {
 				HttpStatus.OK
 		);
 	}
+
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> updatePassword(UpdatePasswordDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getEmail());
+		if (!optionalUser.isPresent()) {
+			log.warn("Usuario no encontrado con email: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		if (!encoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+			log.warn("Contraseña actual incorrecta para usuario: {}", dto.getEmail());
+			return new ResponseEntity<>(
+					new ResponseObject("Contraseña actual incorrecta", TypeResponse.ERROR),
+					HttpStatus.BAD_REQUEST
+			);
+		}
+
+		user.setPassword(encoder.encode(dto.getNewPassword()));
+		repository.save(user);
+
+		log.info("Contraseña actualizada para usuario: {}", dto.getEmail());
+		return new ResponseEntity<>(
+				new ResponseObject("Contraseña actualizada exitosamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+
 
 }
