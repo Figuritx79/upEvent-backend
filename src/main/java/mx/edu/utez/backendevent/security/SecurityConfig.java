@@ -67,7 +67,7 @@ public class SecurityConfig {
 								"/api/registration/workshop-register", " /api/workshop/workshops",
 								"/api/workshop/workshop/**", " /api/workshop/event/**", "/api/workshop/workshops",
 								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
-								"/api/checker/own", "/api/user/update-password")
+								"/api/checker/own", "/api/user/update-password", "/api/user/update-profile")
 						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

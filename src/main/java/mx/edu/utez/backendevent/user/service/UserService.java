@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.user.model.dto.UpdatePasswordDto;
+import mx.edu.utez.backendevent.user.model.dto.UpdateUserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +161,39 @@ public class UserService {
 		log.info("Contraseña actualizada para usuario: {}", dto.getEmail());
 		return new ResponseEntity<>(
 				new ResponseObject("Contraseña actualizada exitosamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> updateProfile(UpdateUserDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getCurrentEmail());
+		if (!optionalUser.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		if (dto.getNewEmail() != null && !dto.getNewEmail().isEmpty()) {
+			user.setEmail(dto.getNewEmail());
+		}
+		if (dto.getName() != null && !dto.getName().isEmpty()) {
+			user.setName(dto.getName());
+		}
+		if (dto.getLastname() != null && !dto.getLastname().isEmpty()) {
+			user.setLastname(dto.getLastname());
+		}
+		if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+			user.setPhone(dto.getPhone());
+		}
+
+		repository.save(user);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Perfil actualizado exitosamente", user, TypeResponse.SUCCESS),
 				HttpStatus.OK
 		);
 	}
