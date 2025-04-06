@@ -1,9 +1,7 @@
-package mx.edu.utez.backendevent.userEventRegistration.model.dto;
+package mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailDto {
+public class UserWorkshopsByEmailDto {
 	@NotBlank(message = "El email es obligatorio")
-	@Email(message = "El email debe ser válido")
+	@Email(message = "El email debe tener un formato válido")
 	private String email;
 }
