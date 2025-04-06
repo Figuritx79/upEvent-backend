@@ -3,6 +3,8 @@ package mx.edu.utez.backendevent.user.service;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import mx.edu.utez.backendevent.security.UserDetailsServiceImpl;
+import mx.edu.utez.backendevent.security.util.JwtUtil;
 import mx.edu.utez.backendevent.user.model.User;
 import mx.edu.utez.backendevent.user.model.dto.UpdatePasswordDto;
 import mx.edu.utez.backendevent.user.model.dto.UpdateUserDto;
@@ -10,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,11 @@ import mx.edu.utez.backendevent.util.TypeResponse;
 public class UserService {
 
 	private final AuthService authService;
+
+	private final UserDetailsServiceImpl userDetailsService;
+
+	private final JwtUtil jwtUtil;
+
 	private Logger log = LoggerFactory.getLogger(UserService.class);
 
 	@ReadOnlyProperty
@@ -35,8 +44,10 @@ public class UserService {
 	private PasswordEncoder encoder;
 
 	@Autowired
-	public UserService(UserRepository repository, AuthService authService, PasswordEncoder encoder) {
+	public UserService(UserRepository repository,JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthService authService, PasswordEncoder encoder) {
 		this.repository = repository;
+		this.userDetailsService = userDetailsService;
+		this.jwtUtil = jwtUtil;
 		this.authService = authService;
 		this.encoder = encoder;
 	}
@@ -194,6 +205,27 @@ public class UserService {
 		}
 
 		repository.saveAndFlush(user);
+
+		if (dto.getNewEmail() != null && !dto.getNewEmail().equals(dto.getCurrentEmail())) {
+			String newToken = jwtUtil.generateToken(userDetailsService.loadUserByUsername(dto.getNewEmail()));
+
+			var headers = new HttpHeaders();
+			ResponseCookie cookie = ResponseCookie.from("access_token", newToken)
+					.httpOnly(true)
+					.secure(false)
+					.maxAge(3600)
+					.sameSite("LAX")
+					.path("/")
+					.build();
+
+			log.info("Perfil y token actualizados" + user.getEmail());
+			var response = new ResponseObject("Autenticado", TypeResponse.SUCCESS);
+
+			headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+			headers.add("Authorization", "Bearer " + newToken);
+
+			return ResponseEntity.ok().headers(headers).body(response);
+		}
 
 		return new ResponseEntity<>(
 				new ResponseObject("Perfil actualizado exitosamente", user, TypeResponse.SUCCESS),
