@@ -14,11 +14,11 @@ public class QrEmailService {
 		this.qrGeneratorService = qrGeneratorService;
 	}
 
-	public void sendQrEmail(String email, String idUser, String idEvent, String idWorkshop, String name) {
+	public void sendQrEmail(String email, String idEvent, String event, String idWorkshop, String workshop) {
 
 		// Datos para generar el QR
-		String qrData = String.format("{\"id_user\": \"%s\", \"id_event\": \"%s\", \"id_workshop\": \"%s\", \"name\": \"%s\"}",
-				idUser, idEvent, idWorkshop, name);
+		String qrData = String.format("{\"email\": \"%s\", \"idEvent\": \"%s\", \"event\": \"%s\", \"idWorkshop\": \"%s\", \"workshop\": \"%s\"}",
+				email, idEvent, event,idWorkshop, workshop);
 
 		// Generar QR en Base64
 		String qrBase64 = qrGeneratorService.generateQrBase64(qrData);

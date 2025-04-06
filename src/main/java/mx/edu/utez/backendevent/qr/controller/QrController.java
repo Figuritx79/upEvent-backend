@@ -19,12 +19,12 @@ public class QrController {
 	@PostMapping("/send")
 	public ResponseEntity<String> sendQr(@RequestBody Map<String, String> request) {
 		String email = request.get("email");
-		String idUser = request.get("id_user");
-		String idEvent = request.get("id_event");
-		String idWorkshop = request.get("id_workshop");
-		String name = request.get("name");
+		String idEvent = request.get("idEvent");
+		String event = request.get("event");
+		String idWorkshop = request.get("idWorkshop");
+		String workshop = request.get("workshop");
 
-		qrEmailService.sendQrEmail(email, idUser, idEvent, idWorkshop, name);
+		qrEmailService.sendQrEmail(email, idEvent, event, idWorkshop, workshop);
 		return ResponseEntity.ok("Correo con QR enviado correctamente.");
 	}
 }
