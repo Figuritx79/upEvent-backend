@@ -24,12 +24,12 @@ import mx.edu.utez.backendevent.user.model.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Occupation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(40)", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false, length = 40, unique = true)
+	private String name;
 
 	@OneToMany(mappedBy = "occupation")
 	@JsonIgnore
