@@ -8,9 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import mx.edu.utez.backendevent.user.model.User;
-import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.BasicWorkshopDto;
-import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsByEmailDto;
-import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,6 @@ import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistratio
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkShopRegistrationRepository;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkshopRegistration;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.UserWorkshopRegistrationId;
-import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.CreateUserWorkshopDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.WorkshopRepository;
@@ -94,5 +91,47 @@ public class UserWorshopRegister {
 				HttpStatus.OK
 		);
 	}
+
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> validateAttendance(ValidateAttendanceDto dto) {
+		Optional<User> optionalUser = userRepository.findByEmail(dto.getEmail());
+		if (optionalUser.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("No existe el usuario con ese email", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		UserWorkshopRegistrationId id = new UserWorkshopRegistrationId(user.getId(), dto.getIdWorkshop());
+
+		Optional<UserWorkshopRegistration> optionalRegistration = registrationRepository.findById(id);
+		if (optionalRegistration.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("No hay registro en este taller", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		UserWorkshopRegistration registration = optionalRegistration.get();
+
+		if (!registration.isStatus()) {
+			return new ResponseEntity<>(
+					new ResponseObject("El usuario ya fue marcado como asistente", TypeResponse.WARN),
+					HttpStatus.CONFLICT
+			);
+		}
+
+		registration.setStatus(false);
+		registrationRepository.saveAndFlush(registration);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Asistencia validada correctamente", TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+
 
 }

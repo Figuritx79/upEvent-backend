@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EventDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsByEmailDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.ValidateAttendanceDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.service.UserWorshopRegister;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -29,5 +31,13 @@ public class UserWorkshopController {
 	) {
 		return userWorshopRegister.getWorkshopsByUserEmail(dto.getEmail(), dto.getIdEvent());
 	}
+
+	@PatchMapping("/validate-attendance")
+	public ResponseEntity<ResponseObject> validateAttendance(
+			@Validated @RequestBody ValidateAttendanceDto dto
+	) {
+		return userWorshopRegister.validateAttendance(dto);
+	}
+
 
 }

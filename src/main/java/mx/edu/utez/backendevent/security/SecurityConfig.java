@@ -68,7 +68,7 @@ public class SecurityConfig {
 								"/api/workshop/workshop/**", " /api/workshop/event/**", "/api/workshop/workshops",
 								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
 								"/api/checker/own", "/api/user/update-password", "/api/user/update-profile", "/api/user-workshops/by-email", "/api/user-workshops/my-workshops",
-								"/api/checker/register", "/api//participant/register", "/api/occupation/", "/api/occupation", "/api/occupation/own", "/api/registration/own")
+								"/api/checker/register", "/api//participant/register", "/api/occupation/", "/api/occupation", "/api/occupation/own", "/api/registration/own", "/validate-attendance")
 						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -78,6 +78,7 @@ public class SecurityConfig {
 									CorsConfiguration config = new CorsConfiguration();
 									config.setAllowCredentials(true);
 									config.addAllowedOrigin("http://localhost:5173");
+									config.addAllowedOrigin("exp://192.168.0.71:8081");
 									config.addAllowedHeader("*");
 									config.addAllowedMethod("*");
 									return config;
