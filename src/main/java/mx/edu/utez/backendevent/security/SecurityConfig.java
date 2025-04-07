@@ -69,7 +69,7 @@ public class SecurityConfig {
 								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
 								"/api/checker/own", "/api/user/update-password", "/api/user/update-profile", "/api/user-workshops/by-email", "/api/user-workshops/my-workshops",
 								"/api/checker/register", "/api//participant/register", "/api/occupation/", "/api/occupation", "/api/occupation/own", "/api/registration/own",
-								"/api/user-workshops/validate-attendance", "/api/registration/register-participant")
+								"/api/user-workshops/validate-attendance", "/api/registration/register-participant", "/api/user-workshops/workshop/users")
 						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

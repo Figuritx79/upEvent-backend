@@ -26,4 +26,10 @@ public interface UserWorkShopRegistrationRepository
 				"JOIN w.event e " +
 				"WHERE u.email = :email AND e.id = :idEvent")
 		List<BasicWorkshopDto> findWorkshopsByUserEmail(@Param("email") String email, @Param("idEvent") UUID idEvent);
-	}
+
+	@Query("SELECT uwr FROM UserWorkshopRegistration uwr " +
+			"JOIN FETCH uwr.user u " +
+			"WHERE uwr.workshop.id = :idWorkshop")
+	List<UserWorkshopRegistration> findUsersByWorkshopId(@Param("idWorkshop") UUID idWorkshop);
+
+}

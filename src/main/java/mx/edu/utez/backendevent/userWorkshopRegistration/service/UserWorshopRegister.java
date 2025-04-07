@@ -134,5 +134,11 @@ public class UserWorshopRegister {
 	}
 
 
-
+	public ResponseEntity<List<UserWorkshopRegistration>> getUsersByWorkshopId(WorkshopRequestDto dto) {
+		List<UserWorkshopRegistration> users = registrationRepository.findUsersByWorkshopId(dto.getWorkshopId());
+		if (users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
 }
