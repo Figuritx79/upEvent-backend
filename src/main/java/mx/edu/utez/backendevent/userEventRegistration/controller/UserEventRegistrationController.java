@@ -2,6 +2,7 @@ package mx.edu.utez.backendevent.userEventRegistration.controller;
 
 import java.util.UUID;
 
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterParticipantDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +63,12 @@ public class UserEventRegistrationController {
 	@GetMapping("/participants/{idEvent}")
 	public ResponseEntity<ResponseObject> findParticipant(@PathVariable UUID idEvent) {
 		return registratationService.findParticipantByEvent(idEvent);
+	}
+
+	@PostMapping("/register-participant")
+	@PermitAll
+	public ResponseEntity<ResponseObject> registerParticipant(@RequestBody RegisterParticipantDto dto) {
+		return registerEventService.registerParticipantToEvent(dto);
 	}
 
 }

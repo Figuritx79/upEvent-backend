@@ -2,6 +2,7 @@ package mx.edu.utez.backendevent.userEventRegistration.service;
 
 import java.sql.SQLException;
 
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterParticipantDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -178,5 +179,45 @@ public class RegisterEventService {
 		sender.SendMail(existUser.get().getEmail(), "¡Inscripción confirmada !", customHtml);
 		return new ResponseEntity<>(new ResponseObject("Registro exitos", TypeResponse.SUCCESS), HttpStatus.CREATED);
 
+	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> registerParticipantToEvent(RegisterParticipantDto dto) {
+		String formattedEventName = dto.getEventName().replace("-", " ");
+
+		var existUser = userRepository.findByEmail(dto.getEmail());
+		var existEvent = eventRepository.findByName(formattedEventName);
+
+		if (!existUser.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		if (!existEvent.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Evento no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+
+		UserEventRegistrationId registrationId = new UserEventRegistrationId(
+				existUser.get().getId(),
+				existEvent.get().getId());
+
+		if (registrationRepository.existsById(registrationId)) {
+			return new ResponseEntity<>(
+					new ResponseObject("El usuario ya está registrado en este evento", TypeResponse.WARN),
+					HttpStatus.CONFLICT);
+		}
+
+		UserEventRegistration eventRegistration = new UserEventRegistration();
+		eventRegistration.setEvent(existEvent.get());
+		eventRegistration.setUser(existUser.get());
+		eventRegistration.setId(registrationId);
+
+		registrationRepository.saveAndFlush(eventRegistration);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Registro exitoso", TypeResponse.SUCCESS),
+				HttpStatus.CREATED);
 	}
 }
