@@ -1,7 +1,11 @@
 package mx.edu.utez.backendevent.userEventRegistration.service;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
+import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistration;
+import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistrationId;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterParticipantDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +66,46 @@ public class UserEventRegistratationService {
 		}
 
 		return new ResponseEntity<>(new ResponseObject("Usuarios", registerUser, TypeResponse.SUCCESS), HttpStatus.OK);
+	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> registerParticipantToEvent(RegisterParticipantDto dto) {
+		String formattedEventName = dto.getEventName().replace("-", " ");
+
+		var existUser = userRepository.findByEmail(dto.getEmail());
+		var existEvent = eventRepository.findByName(formattedEventName);
+
+		if (!existUser.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		if (!existEvent.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Evento no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+
+		UserEventRegistrationId registrationId = new UserEventRegistrationId(
+				existUser.get().getId(),
+				existEvent.get().getId());
+
+		if (registrationRepository.existsById(registrationId)) {
+			return new ResponseEntity<>(
+					new ResponseObject("El usuario ya está registrado en este evento", TypeResponse.WARN),
+					HttpStatus.CONFLICT);
+		}
+
+		UserEventRegistration eventRegistration = new UserEventRegistration();
+		eventRegistration.setEvent(existEvent.get());
+		eventRegistration.setUser(existUser.get());
+		eventRegistration.setId(registrationId);
+
+		registrationRepository.saveAndFlush(eventRegistration);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Registro exitoso", TypeResponse.SUCCESS),
+				HttpStatus.CREATED);
 	}
 
 }

@@ -5,6 +5,7 @@ import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EventDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.UserWorkshopsByEmailDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.ValidateAttendanceDto;
+import mx.edu.utez.backendevent.userWorkshopRegistration.model.dtos.WorkshopRequestDto;
 import mx.edu.utez.backendevent.userWorkshopRegistration.service.UserWorshopRegister;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,8 @@ public class UserWorkshopController {
 		return userWorshopRegister.validateAttendance(dto);
 	}
 
-
+	@PostMapping("/workshop/users")
+	public ResponseEntity<?> getUsersByWorkshop(@RequestBody WorkshopRequestDto dto) {
+		return userWorshopRegister.getUsersByWorkshopId(dto);
+	}
 }

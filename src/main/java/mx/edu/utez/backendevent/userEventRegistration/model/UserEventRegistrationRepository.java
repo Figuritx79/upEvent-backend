@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface UserEventRegistrationRepository extends JpaRepository<UserEventRegistration, UserEventRegistrationId> {
 
 	public List<UserEventRegistration> findByUser(User user);
-
+	public List<UserEventRegistration> findByUserAndEvent(User user, Event event);
 	public List<UserEventRegistration> findByEvent(Event event);
 
 	@Query(value = "SELECT * FROM user_event_registration WHERE id_event = ?1 AND id_user =?2 ;", nativeQuery = true)
