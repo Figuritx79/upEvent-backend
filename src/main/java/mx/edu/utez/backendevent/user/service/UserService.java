@@ -233,6 +233,42 @@ public class UserService {
 		);
 	}
 
+	@Transactional(rollbackFor = {SQLException.class})
+	public ResponseEntity<ResponseObject> updateChecker(UpdateUserDto dto) {
+		Optional<User> optionalUser = repository.findByEmail(dto.getCurrentEmail());
+		if (!optionalUser.isPresent()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Usuario no encontrado", TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		User user = optionalUser.get();
+
+		if (dto.getNewEmail() != null && !dto.getNewEmail().isEmpty()) {
+			user.setEmail(dto.getNewEmail());
+		}
+		if (dto.getName() != null && !dto.getName().isEmpty()) {
+			user.setName(dto.getName());
+		}
+		if (dto.getLastname() != null && !dto.getLastname().isEmpty()) {
+			user.setLastname(dto.getLastname());
+		}
+		if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+			user.setPhone(dto.getPhone());
+		}
+		if(dto.getCompanyName() != null && !dto.getCompanyName().isEmpty()) {
+			user.setCompanyName(dto.getCompanyName());
+		}
+
+		repository.saveAndFlush(user);
+
+		return new ResponseEntity<>(
+				new ResponseObject("Checador actualizado exitosamente", user, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
 
 
 }

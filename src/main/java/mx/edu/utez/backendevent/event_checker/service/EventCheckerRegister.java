@@ -1,14 +1,18 @@
 package mx.edu.utez.backendevent.event_checker.service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import mx.edu.utez.backendevent.event.model.Event;
+import mx.edu.utez.backendevent.event_checker.model.dto.CheckerAssignDto;
+import mx.edu.utez.backendevent.gender.model.Gender;
 import org.hibernate.annotations.processing.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,5 +93,45 @@ public class EventCheckerRegister {
 						TypeResponse.SUCCESS
 				));
 	}
+
+	@Transactional(rollbackFor = SQLException.class)
+	public ResponseEntity<ResponseObject> assignChecker(CheckerAssignDto dto) {
+		// Buscar el checador, el evento y el administrador usando los repositorios
+		Optional<User> userOpt = userRepository.findById(dto.getIdChecker());
+		Optional<Event> eventOpt = eventRepository.findById(dto.getIdEvent());
+		Optional<User> userAdminOpt = userRepository.findByEmail(dto.getAssignedBy());
+
+		if (userOpt.isPresent() && eventOpt.isPresent() && userAdminOpt.isPresent()) {
+			// Recupera las instancias ya existentes
+			User checker = userOpt.get();
+			Event event = eventOpt.get();
+			User admin = userAdminOpt.get();
+
+			// Crear el identificador compuesto para el EventChecker
+			EventCheckerId eventCheckerId = new EventCheckerId(event.getId(), checker.getId());
+
+			EventChecker evChk = new EventChecker();
+			evChk.setId(eventCheckerId);
+			evChk.setEvent(event);      // Se relaciona con el evento existente
+			evChk.setChecker(checker);  // Se relaciona con el usuario (chechador) existente
+			evChk.setAssignedBy(admin); // Se relaciona con el usuario administrador existente
+
+			// Guardar solamente el objeto EventChecker sin persistir de nuevo a los usuarios.
+			eventCheckerRepository.saveAndFlush(evChk);
+		} else {
+			return ResponseEntity
+					.status(HttpStatus.BAD_REQUEST)
+					.body(new ResponseObject(
+							"Checador no asignado",
+							TypeResponse.WARN));
+		}
+
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(new ResponseObject(
+						"Checador asignado",
+						TypeResponse.SUCCESS));
+	}
+
 
 }

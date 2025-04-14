@@ -25,7 +25,7 @@ public class WorkshopDto {
 
 	@NotBlank(groups = {Create.class, Update.class}, message = "El nombre del ponente es obligatorio")
 	@Size(groups = {Create.class, Update.class}, max = 100, message = "El nombre del ponente no puede exceder los 100 caracteres")
-	private String speaker;
+	private String speakerName;
 
 	@NotNull(groups = {Create.class, Update.class}, message = "El evento es obligatorio")
 	private Event event;

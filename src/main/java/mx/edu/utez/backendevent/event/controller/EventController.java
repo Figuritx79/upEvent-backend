@@ -50,6 +50,11 @@ public class EventController {
 		return service.findById(id);
 	}
 
+	@GetMapping("/{name}")
+	public ResponseEntity<ResponseObject> getEventByName(@PathVariable String name) {
+		return service.findByName(name);
+	}
+
 	@PostMapping(value = "/event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseObject> createEvent(
 			@RequestPart("eventDto") String eventDtoStr,

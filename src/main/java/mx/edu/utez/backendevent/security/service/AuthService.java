@@ -86,7 +86,7 @@ public class AuthService {
 		ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
 				.httpOnly(true)
 				.secure(false)
-				.maxAge(3600)
+				.maxAge(86400)
 				.sameSite("LAX")
 				.path("/")
 				.build();

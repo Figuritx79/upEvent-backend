@@ -75,6 +75,19 @@ public class EventService {
 				HttpStatus.OK);
 	}
 
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> findByName (String name) {
+		Optional<Event> event = eventrepository.findByName(name);
+		if (event.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(
+				new ResponseObject("Evento encontrado", event.get(), TypeResponse.SUCCESS),
+				HttpStatus.OK);
+	}
+
 	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> save(CreateEventDto eventDto) {
 		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
@@ -119,7 +132,7 @@ public class EventService {
 
 		Event savedEvent = eventrepository.saveAndFlush(event);
 		return new ResponseEntity<>(
-				new ResponseObject("Evento creado exitosamente", TypeResponse.SUCCESS),
+				new ResponseObject("Evento creado exitosamente", savedEvent, TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
 	}
 
