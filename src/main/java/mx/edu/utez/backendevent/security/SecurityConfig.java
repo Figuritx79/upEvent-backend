@@ -42,6 +42,7 @@ public class SecurityConfig {
 						// "/api/workshop/event/**",
 						// "/api/registration/**")
 						// .permitAll()
+						.requestMatchers("/api/checker/assign", "api/event/").permitAll()
 						.requestMatchers("/api/auth/login", "/api/up", "/api/user/register-admin-event",
 								"/api/auth/recovery-password", "/api/auth/reset-password",
 								"/api/landing-page/landing/**", "/api/workshop/event/**",
@@ -64,8 +65,8 @@ public class SecurityConfig {
 						.requestMatchers("/api/user/profile", "/api/event/events/**", "/api/user/update",
 								"/api/qr/send",
 								"/api/registration/event-register/movil ", "/api/registration/own",
-								"/api/registration/workshop-register", " /api/workshop/workshops",
-								"/api/workshop/workshop/**", " /api/workshop/event/**", "/api/workshop/workshops",
+								"/api/registration/workshop-register",
+								"/api/workshop/workshop/**", " /api/workshop/event/**",
 								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
 								"/api/checker/own", "/api/user/update-password", "/api/user/update-profile", "/api/user-workshops/by-email", "/api/user-workshops/my-workshops",
 								"/api/checker/register", "/api//participant/register", "/api/occupation/", "/api/occupation", "/api/occupation/own", "/api/registration/own",
