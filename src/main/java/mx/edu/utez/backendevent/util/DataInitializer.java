@@ -307,15 +307,37 @@ public class DataInitializer {
 				userRepository.saveAndFlush(userChecker);
 			}
 
-			Optional<User> eventAdmin = userRepository.findByEmail("20233tn077@utez.edu.mx");
+			Optional<User> adminDefault = userRepository.findByEmail("20233tn077@utez.edu.mx");
+			if (!normal.isPresent()) {
+				var encoder = new BCryptPasswordEncoder();
+				var name = "default";
+				var lastname = "default";
+				var email = "default@gmail.com";
+				var password = encoder.encode("default");
+				var company = "default";
+				var adminRole = new Role(2);
+				var phone = "7775559991";
+				var userChecker = new User();
 
-			if (eventAdmin.isPresent() && !eventRepository.findByName("Congreso de Tecnología 2024").isPresent()) {
+				userChecker.setEmail(email);
+				userChecker.setLastname(lastname);
+				userChecker.setName(name);
+				userChecker.setPassword(password);
+				userChecker.setRole(adminRole);
+				userChecker.setPhone(phone);
+				userChecker.setCompanyName(company);
+				userRepository.saveAndFlush(userChecker);
+			}
+
+			Optional<User> eventAdmin = userRepository.findByEmail("default@gmail.com");
+
+			if (eventAdmin.isPresent() && !eventRepository.findByName("Evento por default-1458-jais@/*5").isPresent()) {
 				Date startDate = Date.valueOf("2024-03-15");
 				Date endDate = Date.valueOf("2024-03-17");
 
 				Event techEvent = new Event(
-						"Congreso de Tecnología 2024",
-						"Evento anual sobre innovación tecnológica y tendencias digitales",
+						"Evento por default-1458-jais@/*5",
+						"Evento por default",
 						startDate,
 						endDate,
 						"", // Imagen vacía
@@ -324,7 +346,6 @@ public class DataInitializer {
 
 				eventRepository.saveAndFlush(techEvent);
 			}
-
 		};
 	}
 }

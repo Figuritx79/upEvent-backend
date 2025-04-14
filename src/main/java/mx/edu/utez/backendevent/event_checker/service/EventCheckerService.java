@@ -65,7 +65,7 @@ public class EventCheckerService {
 					HttpStatus.NOT_FOUND);
 		}
 
-		var myCheckers = eventCheckerRepository.findByAssignedBy(existeChecker.get());
+		var myCheckers = eventCheckerRepository.findDistinctCheckerByAssignedBy(existeChecker.get().getId());
 
 		if (myCheckers.isEmpty()) {
 			log.info("No tiene checadores" + dto.getEmail());

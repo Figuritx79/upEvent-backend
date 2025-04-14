@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.event_checker.controller;
 
+import mx.edu.utez.backendevent.event_checker.model.dto.CheckerAssignDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,11 @@ public class EventCheckerController {
 	@PostMapping("/create")
 	public ResponseEntity<ResponseObject> saveChecker(@Valid @RequestBody CheckerRegisterDto dto) {
 		return eventCheckerRegister.saveChecker(dto);
+	}
+
+	@PostMapping("/assign")
+	public ResponseEntity<ResponseObject> assignChecker(@Valid @RequestBody CheckerAssignDto dto) {
+		return eventCheckerRegister.assignChecker(dto);
 	}
 
 }

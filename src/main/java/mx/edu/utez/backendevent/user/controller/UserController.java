@@ -82,4 +82,11 @@ public class UserController {
 		return service.updateProfile(dto);
 	}
 
+	@PatchMapping("/update-checker")
+	public ResponseEntity<ResponseObject> updateChecker(
+			@Valid @RequestBody UpdateUserDto dto
+	) {
+		return service.updateChecker(dto);
+	}
+
 }
