@@ -50,7 +50,7 @@ public class SecurityConfig {
 						.permitAll()
 						.requestMatchers("/api/intersection/suscribe")
 						.hasAnyAuthority("SUPER_ADMIN")
-						.requestMatchers("/api/event/own", "/api/landing-page/landing/create/",
+						.requestMatchers("/api/event/own", "/api/landing-page/landing/create/", "/api/workshop/status",
 								"/api/workshop/workshops/create", "/api/event/event", " /api/event/events-update",
 								"/api/event/events-delete/**", "/api/landing-page/landing/create/**",
 								"/api/checker/create", "api/event/**")
