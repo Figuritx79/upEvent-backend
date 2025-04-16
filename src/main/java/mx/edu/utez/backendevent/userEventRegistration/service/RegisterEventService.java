@@ -3,6 +3,7 @@ package mx.edu.utez.backendevent.userEventRegistration.service;
 import java.sql.SQLException;
 
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterParticipantDto;
+import mx.edu.utez.backendevent.util.EmailQR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ import mx.edu.utez.backendevent.util.TypeResponse;
 @Service
 @Transactional
 public class RegisterEventService {
+	private final EmailQR emailQR;
 	private UserRepository userRepository;
 	private EventRepository eventRepository;
 	private EmailSender sender;
@@ -67,7 +69,6 @@ public class RegisterEventService {
 				    </ul>
 				  </div>
 			<div>
-			  <img src="{url}" alt="qr" style="width: 250px; height: 250px; display: block; margin: 20px auto;">
 			</div>
 			<div>
 				<p>📱 Para inscribirte a los diferentes taller por favor usar la app movil. Esto te facilitarar la inscripcion a los diferentes tallers y los diferenetes eventos de la plataforma 😄 </p>
@@ -77,8 +78,8 @@ public class RegisterEventService {
 				""";
 
 	public RegisterEventService(UserRepository userRepository, EventRepository eventRepository, EmailSender sender,
-			PasswordEncoder encoder, GenderRepository gender, OccupationRepository occupationRepository,
-			UserEventRegistrationRepository registrationRepository, QrGeneratorService generatorService) {
+								PasswordEncoder encoder, GenderRepository gender, OccupationRepository occupationRepository,
+								UserEventRegistrationRepository registrationRepository, QrGeneratorService generatorService, EmailQR emailQR) {
 		this.userRepository = userRepository;
 		this.eventRepository = eventRepository;
 		this.sender = sender;
@@ -87,6 +88,7 @@ public class RegisterEventService {
 		this.occupationRepository = occupationRepository;
 		this.registrationRepository = registrationRepository;
 		this.qrGenerator = generatorService;
+		this.emailQR = emailQR;
 	}
 
 	@Transactional(rollbackFor = { SQLException.class })
@@ -171,12 +173,18 @@ public class RegisterEventService {
 		eventRegistration.setId(registrationId);
 
 		registrationRepository.saveAndFlush(eventRegistration);
-		var qrString = qrGenerator.generateQrBase64(existEvent.get().getId());
+
+		//Generar y mandar QR
+		String qrData = String.format("{\"email\": \"%s\", \"idEvent\": \"%s\", \"event\": \"%s\"}",
+				existUser.get().getEmail(), existEvent.get().getId(), existEvent.get().getName());
+
+		String qrBase64 = qrGenerator.generateQrBase64(qrData);
+
 		var customHtml = template.replace("{user}", existUser.get().getName())
 				.replace("{event}", existEvent.get().getName())
 				.replace("{date}", existEvent.get().getStartDate().toString())
 				.replace("{hour}", "16 horas");
-		sender.SendMail(existUser.get().getEmail(), "¡Inscripción confirmada !", customHtml);
+		emailQR.SendMail(existUser.get().getEmail(), "¡Inscripción confirmada !", customHtml, qrBase64, "codigo_qr.png" );
 		return new ResponseEntity<>(new ResponseObject("Registro exitos", TypeResponse.SUCCESS), HttpStatus.CREATED);
 
 	}
