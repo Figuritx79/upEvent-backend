@@ -2,6 +2,7 @@ package mx.edu.utez.backendevent.workshop.controller;
 
 import jakarta.validation.Valid;
 import mx.edu.utez.backendevent.landingPage.model.dtos.CreateLandingPageDto;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.WorkshopDto;
@@ -62,6 +63,11 @@ public class WorkshopController {
 			return new ResponseEntity<>(new ResponseObject("Error al procesar la solicitud", TypeResponse.ERROR),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@PatchMapping("/status")
+	public ResponseEntity<ResponseObject> changeStatus(@Valid @RequestBody UUID id) {
+		return service.changeStatus(id);
 	}
 
 	// este eliminar es un eliminar fisico asi que hay que tener cuidado

@@ -1,6 +1,8 @@
 package mx.edu.utez.backendevent.workshop.service;
 
 import mx.edu.utez.backendevent.event.model.EventRepository;
+import mx.edu.utez.backendevent.user.model.User;
+import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.CloudinaryUpload;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
@@ -142,6 +144,26 @@ public class WorkshopService {
 
 		return new ResponseEntity<>(
 				new ResponseObject("Estado actualizado", workshop, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> changeStatus(UUID id) {
+		Optional<Workshop> optionalWorkshop = repository.findById(id);
+		if (!optionalWorkshop.isPresent()) {
+			log.info("Taller no encontrado con id: {}", id);
+			return new ResponseEntity<>(
+					new ResponseObject("Taller no encontrado", TypeResponse.WARN),
+					HttpStatus.NOT_FOUND
+			);
+		}
+		Workshop workshop = optionalWorkshop.get();
+		workshop.setStatus(!workshop.isStatus());
+		repository.saveAndFlush(workshop);
+		log.info("Estado del usuario {} cambiado a {}", id, workshop.isStatus());
+		return new ResponseEntity<>(
+				new ResponseObject("Estado actualizado correctamente", TypeResponse.SUCCESS),
 				HttpStatus.OK
 		);
 	}
