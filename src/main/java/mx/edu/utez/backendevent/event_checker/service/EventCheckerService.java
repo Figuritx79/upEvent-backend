@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.event_checker.service;
 
+import mx.edu.utez.backendevent.landingPage.model.LandingPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import mx.edu.utez.backendevent.user.model.UserRepository;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -79,4 +83,22 @@ public class EventCheckerService {
 
 	}
 
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> checkersByEvent(UUID idEvent) {
+		var checkers = eventCheckerRepository.findCheckersByEventId(idEvent);
+
+		if (checkers.isEmpty()) {
+			log.info("No hay checadores asignados al evento con ID: " + idEvent);
+			return new ResponseEntity<>(
+					new ResponseObject("No hay checadores asignados a este evento", TypeResponse.WARN),
+					HttpStatus.NO_CONTENT
+			);
+		}
+
+		log.info("Checadores asignados al evento con ID: " + idEvent);
+		return new ResponseEntity<>(
+				new ResponseObject("Checadores del evento encontrados", checkers, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
 }

@@ -19,4 +19,11 @@ public interface EventCheckerRepository extends JpaRepository<EventChecker, Even
 			"GROUP BY e.id_checker",
 			nativeQuery = true)
 	List<EventChecker> findDistinctCheckerByAssignedBy(@Param("assignedBy") UUID assignedBy);
+
+	@Query(value = "SELECT e.id_checker, e.id_event, e.assigned_by " +
+			"FROM event_checker e " +
+			"WHERE e.id_event = :eventId",
+			nativeQuery = true)
+	List<EventChecker> findCheckersByEventId(@Param("eventId") UUID eventId);
+
 }

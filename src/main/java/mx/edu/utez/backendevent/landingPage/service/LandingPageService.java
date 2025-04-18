@@ -71,6 +71,19 @@ public class LandingPageService {
 				HttpStatus.OK);
 	}
 
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> findByEvent(UUID id) {
+		Optional<LandingPage> landingPage = landingRepository.findByEvent(id);
+		if (landingPage.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Landing page no encontrada", null, TypeResponse.WARN),
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(
+				new ResponseObject("Landing page encontrada", landingPage.get(), TypeResponse.SUCCESS),
+				HttpStatus.OK);
+	}
+
 	@Transactional(rollbackFor = { SQLException.class })
 	public ResponseEntity<ResponseObject> saveLanding(CreateLandingPageDto landing) {
 		var eventData = eventRepository.findByName(landing.getEventName());
