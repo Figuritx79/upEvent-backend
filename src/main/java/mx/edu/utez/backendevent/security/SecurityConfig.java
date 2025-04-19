@@ -65,13 +65,13 @@ public class SecurityConfig {
 						.requestMatchers("/api/user/profile", "/api/event/events/**", "/api/user/update",
 								"/api/qr/send",
 								"/api/registration/event-register/movil ", "/api/registration/own",
-								"/api/registration/workshop-register",
+								"/api/registration/workshop-register", "/api/registration/all/{id}",
 								"/api/workshop/workshop/**", " /api/workshop/event/**",
 								"/api/workshop/event/**", "/api/registration/participants/**", "/api/checker/assigned",
 								"/api/checker/own", "/api/user/update-password", "/api/user/update-profile", "/api/user-workshops/by-email", "/api/user-workshops/my-workshops",
 								"/api/checker/register", "/api//participant/register", "/api/occupation/", "/api/occupation", "/api/occupation/own", "/api/registration/own",
 								"/api/user-workshops/validate-attendance", "/api/registration/register-participant", "/api/user-workshops/workshop/users")
-						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO")
+						.hasAnyAuthority("NORMAL", "CHECADOR", "ADMIN_EVENTO", "SUPER_ADMIN")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.cors(

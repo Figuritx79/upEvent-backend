@@ -39,6 +39,11 @@ public class UserEventRegistrationController {
 		this.registerWorkshopService = registerWorkshopService;
 	}
 
+	@GetMapping("/all/{id}")
+	public ResponseEntity<ResponseObject> getUsersListByEvent(@PathVariable UUID id) {
+		return registratationService.getUsersListByEvent(id);
+	}
+
 	@PostMapping("/event-register")
 	@PermitAll
 	public ResponseEntity<ResponseObject> saveRegistration(@RequestBody RegisterEventUserDto dto) {
