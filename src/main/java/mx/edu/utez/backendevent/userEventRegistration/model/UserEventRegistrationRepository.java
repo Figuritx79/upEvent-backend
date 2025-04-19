@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.userEventRegistration.model;
 
+import mx.edu.utez.backendevent.event_checker.model.EventChecker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,10 @@ public interface UserEventRegistrationRepository extends JpaRepository<UserEvent
 
 	@Query(value = "SELECT * FROM user_event_registration WHERE id_event = ?1 AND id_user =?2 ;", nativeQuery = true)
 	Optional<UserEventRegistration> isUserRegistered(@Param("eventId") UUID eventId, @Param("userId") UUID userId);
+
+	@Query(value = "SELECT * " +
+			"FROM user_event_registration " +
+			"WHERE id_event = :eventId",
+			nativeQuery = true)
+	List<UserEventRegistration> getUsersListByEvent(@Param("eventId") UUID eventId);
 }

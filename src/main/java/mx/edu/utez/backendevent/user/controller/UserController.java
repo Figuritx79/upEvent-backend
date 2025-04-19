@@ -55,6 +55,11 @@ public class UserController {
 		return createAdminEvent.registerAdmin(adminDto);
 	}
 
+	@PostMapping("/create")
+	public ResponseEntity<ResponseObject> create(@RequestBody CreateEventAdminDto adminDto) {
+		return createAdminEvent.registerAdmin(adminDto);
+	}
+
 	@PostMapping("/profile")
 	public ResponseEntity<ResponseObject> profile(@RequestBody EmailDto dto) {
 		return service.profile(dto);
@@ -80,6 +85,13 @@ public class UserController {
 			@Valid @RequestBody UpdateUserDto dto
 	) {
 		return service.updateProfile(dto);
+	}
+
+	@PatchMapping("/updateAdmin")
+	public ResponseEntity<ResponseObject> updateAdmin(
+			@Valid @RequestBody UpdateUserDto dto
+	) {
+		return service.updateAdmin(dto);
 	}
 
 	@PatchMapping("/update-checker")

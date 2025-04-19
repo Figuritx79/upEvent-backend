@@ -3,9 +3,12 @@ package mx.edu.utez.backendevent.userEventRegistration.service;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import mx.edu.utez.backendevent.event_checker.service.EventCheckerService;
 import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistration;
 import mx.edu.utez.backendevent.userEventRegistration.model.UserEventRegistrationId;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.RegisterParticipantDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,8 @@ public class UserEventRegistratationService {
 	private UserRepository userRepository;
 	private UserEventRegistrationRepository registrationRepository;
 	private EventRepository eventRepository;
+
+	private Logger log = LoggerFactory.getLogger(EventCheckerService.class);
 
 	@Autowired
 	public UserEventRegistratationService(UserRepository userRepository,
@@ -108,4 +113,22 @@ public class UserEventRegistratationService {
 				HttpStatus.CREATED);
 	}
 
+	@Transactional(readOnly = true)
+	public ResponseEntity<ResponseObject> getUsersListByEvent(UUID idEvent) {
+		var users = registrationRepository.getUsersListByEvent(idEvent);
+
+		if (users.isEmpty()) {
+			log.info("No hay usuarios inscritos al evento con ID: " + idEvent);
+			return new ResponseEntity<>(
+					new ResponseObject("No hay usuarios inscritos a este evento", TypeResponse.WARN),
+					HttpStatus.NO_CONTENT
+			);
+		}
+
+		log.info("Usuarios inscritos al evento con ID: " + idEvent);
+		return new ResponseEntity<>(
+				new ResponseObject("Usuarios inscritos encontrados", users, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
+	}
 }
