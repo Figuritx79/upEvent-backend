@@ -34,6 +34,11 @@ public class LandingPageController {
 		return service.findBySlug(slug);
 	}
 
+	@GetMapping("/landing/event/{id}")
+	public ResponseEntity<ResponseObject> getLandingByEvent(@PathVariable UUID id) {
+		return service.findByEvent(id);
+	}
+
 	@PostMapping(value = "/landing/create/{eventName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseObject> saveLanding(@PathVariable String eventName,
 			@RequestPart("logo") MultipartFile logo, @RequestPart("gallery1") MultipartFile gallery1,
