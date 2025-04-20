@@ -1,6 +1,7 @@
 package mx.edu.utez.backendevent.event_checker.service;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import mx.edu.utez.backendevent.event.model.Event;
@@ -133,5 +134,53 @@ public class EventCheckerRegister {
 						TypeResponse.SUCCESS));
 	}
 
+	@Transactional(rollbackFor = SQLException.class)
+	public ResponseEntity<?> assignCheckersToEvent(List<CheckerAssignDto> dtoList) {
+		if (dtoList == null || dtoList.isEmpty()) {
+			return new ResponseEntity<>("Lista vacía de asignaciones", HttpStatus.BAD_REQUEST);
+		}
+
+		// Tomamos el primer elemento para obtener el evento y admin (todos deben ser iguales)
+		CheckerAssignDto sampleDto = dtoList.get(0);
+
+		// Buscar evento
+		Optional<Event> optionalEvent = eventRepository.findById(sampleDto.getIdEvent());
+		if (optionalEvent.isEmpty()) {
+			return new ResponseEntity<>("Evento no encontrado", HttpStatus.NOT_FOUND);
+		}
+
+		// Buscar admin (por correo)
+		Optional<User> optionalAdmin = userRepository.findByEmail(sampleDto.getAssignedBy());
+		if (optionalAdmin.isEmpty()) {
+			return new ResponseEntity<>("Administrador no encontrado", HttpStatus.NOT_FOUND);
+		}
+
+		Event event = optionalEvent.get();
+		User admin = optionalAdmin.get();
+
+		// 1. Eliminar asignaciones previas del admin para este evento
+		List<EventChecker> existentes = eventCheckerRepository.findByEventIdAndAssignedById(
+				event.getId(), admin.getId()
+		);
+		eventCheckerRepository.deleteAll(existentes);
+
+		// 2. Insertar nuevas asignaciones
+		for (CheckerAssignDto dto : dtoList) {
+			Optional<User> optionalChecker = userRepository.findById(dto.getIdChecker());
+			if (optionalChecker.isEmpty()) continue;
+
+			User checker = optionalChecker.get();
+
+			EventChecker nuevaAsignacion = new EventChecker();
+			nuevaAsignacion.setId(new EventCheckerId(event.getId(), checker.getId()));
+			nuevaAsignacion.setEvent(event);
+			nuevaAsignacion.setChecker(checker);
+			nuevaAsignacion.setAssignedBy(admin);
+
+			eventCheckerRepository.save(nuevaAsignacion);
+		}
+
+		return new ResponseEntity<>("Checadores asignados correctamente", HttpStatus.OK);
+	}
 
 }

@@ -26,4 +26,6 @@ public interface EventCheckerRepository extends JpaRepository<EventChecker, Even
 			nativeQuery = true)
 	List<EventChecker> findCheckersByEventId(@Param("eventId") UUID eventId);
 
+	List<EventChecker> findByEventIdAndAssignedById(UUID eventId, UUID assignedById);
+
 }

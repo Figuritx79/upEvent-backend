@@ -12,6 +12,7 @@ import mx.edu.utez.backendevent.event_checker.service.EventCheckerService;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -51,4 +52,8 @@ public class EventCheckerController {
 		return eventCheckerRegister.assignChecker(dto);
 	}
 
+	@PostMapping("/reassign")
+	public ResponseEntity<?> assignCheckers(@RequestBody List<CheckerAssignDto> dtoList) {
+		return eventCheckerRegister.assignCheckersToEvent(dtoList);
+	}
 }
