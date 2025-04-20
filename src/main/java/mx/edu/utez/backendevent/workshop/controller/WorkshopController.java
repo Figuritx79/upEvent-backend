@@ -8,6 +8,7 @@ import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.WorkshopDto;
 import mx.edu.utez.backendevent.workshop.model.WorkshopRepository;
 import mx.edu.utez.backendevent.workshop.model.dtos.CreateWorkShopDto;
+import mx.edu.utez.backendevent.workshop.model.dtos.UpdateWorkShopDto;
 import mx.edu.utez.backendevent.workshop.service.WorkshopService;
 
 import org.springframework.http.HttpStatus;
@@ -75,4 +76,23 @@ public class WorkshopController {
 	public ResponseEntity<ResponseObject> deleteWorkshop(@PathVariable UUID id) {
 		return service.deleteById(id);
 	}
+
+	@PutMapping(value = "/workshop/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> updateWorkshop(
+			@RequestPart("workshop") String workshopJson,
+			@RequestPart(value = "workshopImage", required = false) MultipartFile workshopImage) {
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			var workshopDto = objectMapper.readValue(workshopJson, UpdateWorkShopDto.class);
+			workshopDto.setWorkshopImage(workshopImage);
+			return service.updateWorkshop(workshopDto);
+		} catch (Exception e) {
+			return new ResponseEntity<>(
+					new ResponseObject("Error al procesar la solicitud", TypeResponse.ERROR),
+					HttpStatus.INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+
 }

@@ -9,6 +9,7 @@ import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.workshop.model.Workshop;
 import mx.edu.utez.backendevent.workshop.model.WorkshopRepository;
 import mx.edu.utez.backendevent.workshop.model.dtos.CreateWorkShopDto;
+import mx.edu.utez.backendevent.workshop.model.dtos.UpdateWorkShopDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +122,43 @@ public class WorkshopService {
 
 		return new ResponseEntity<>(new ResponseObject("Se creo el taller", workshop, TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
+	}
+
+	@Transactional(rollbackFor = { SQLException.class })
+	public ResponseEntity<ResponseObject> updateWorkshop(UpdateWorkShopDto dto) {
+		var workshopOptional = repository.findById(dto.getId());
+		if (workshopOptional.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Taller no encontrado", null, TypeResponse.WARN),
+					HttpStatus.NOT_FOUND
+			);
+		}
+
+		var workshop = workshopOptional.get();
+
+		try {
+			if (dto.getWorkshopImage() != null && !dto.getWorkshopImage().isEmpty()) {
+				String newWorkshopImage = cloudinaryUpload.UploadImage(dto.getWorkshopImage());
+				workshop.setImage(newWorkshopImage);
+			}
+		} catch (IOException e) {
+			return new ResponseEntity<>(
+					new ResponseObject("Error al subir la imagen", null, TypeResponse.ERROR),
+					HttpStatus.INTERNAL_SERVER_ERROR
+			);
+		}
+
+		workshop.setName(dto.getName());
+		workshop.setCapacity(dto.getCapacity());
+		workshop.setDescription(dto.getDescription());
+		workshop.setHour(dto.getHour());
+		workshop.getSpeakerInfo().put("speaker_name", dto.getSpeakerName());
+
+		repository.saveAndFlush(workshop);
+		return new ResponseEntity<>(
+				new ResponseObject("Taller actualizado", workshop, TypeResponse.SUCCESS),
+				HttpStatus.OK
+		);
 	}
 
 	// Tengo un conflico con este, ya que si el taller esta asociado a un evento, no
