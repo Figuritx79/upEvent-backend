@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.landingPage.controller;
 
+import mx.edu.utez.backendevent.landingPage.model.dtos.UpdateLandingPageDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.landingPage.model.dtos.CreateLandingPageDto;
@@ -58,6 +59,26 @@ public class LandingPageController {
 			return new ResponseEntity<>(new ResponseObject("Error al procesar la solicitud", TypeResponse.ERROR),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@PutMapping(value = "/landing/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> updateLanding(
+			@RequestPart("id") String id,
+			@RequestPart(value = "logo", required = false) MultipartFile logo,
+			@RequestPart(value = "gallery1", required = false) MultipartFile gallery1,
+			@RequestPart(value = "gallery2", required = false) MultipartFile gallery2,
+			@RequestPart(value = "gallery3", required = false) MultipartFile gallery3,
+			@RequestPart("eventName") String eventName) {
+
+		UpdateLandingPageDto landingPageDto = new UpdateLandingPageDto();
+		landingPageDto.setId(id);
+		landingPageDto.setLogo(logo);
+		landingPageDto.setGallery1(gallery1);
+		landingPageDto.setGallery2(gallery2);
+		landingPageDto.setGallery3(gallery3);
+		landingPageDto.setEventName(eventName.replace("-", " "));
+
+		return service.updateLanding(landingPageDto);
 	}
 
 	@DeleteMapping("/landing/delete/{id}")

@@ -1,5 +1,7 @@
 package mx.edu.utez.backendevent.landingPage.service;
 
+import mx.edu.utez.backendevent.event.model.Event;
+import mx.edu.utez.backendevent.landingPage.model.dtos.UpdateLandingPageDto;
 import mx.edu.utez.backendevent.util.CloudinaryUpload;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
@@ -137,54 +139,6 @@ public class LandingPageService {
 				HttpStatus.OK);
 	}
 
-	// LandingPage landingPage = new LandingPage();
-	// landingPage.setEvent(landingPageDto.getEvent());
-	// landingPage.setLogo(landingPageDto.getLogo());
-	// landingPage.setGallery(landingPageDto.getGallery());
-	// landingPage.setUrl(landingPageDto.getUrl());
-	// landingPage.setSlug(landingPageDto.getSlug());
-
-	// LandingPage savedLandingPage = repository.saveAndFlush(landingPage);
-	// return new ResponseEntity<>(
-	// new ResponseObject("Landing page creada exitosamente", savedLandingPage,
-	// TypeResponse.SUCCESS),
-	// HttpStatus.CREATED
-	// );
-	// }
-
-	// @Transactional
-	// public ResponseEntity<ResponseObject> update(LandingPageDto landingPageDto) {
-	// Optional<LandingPage> optionalLandingPage =
-	// repository.findById(landingPageDto.getId());
-	// if (optionalLandingPage.isEmpty()) {
-	// return new ResponseEntity<>(
-	// new ResponseObject("Landing page no encontrada", null, TypeResponse.WARN),
-	// HttpStatus.NOT_FOUND
-	// );
-	// }
-
-	// if (repository.existsBySlugAndIdNot(landingPageDto.getSlug(),
-	// landingPageDto.getId())) {
-	// return new ResponseEntity<>(
-	// new ResponseObject("El slug ya está en uso por otra landing page", null,
-	// TypeResponse.ERROR),
-	// HttpStatus.BAD_REQUEST
-	// );
-	// }
-
-	// LandingPage landingPage = optionalLandingPage.get();
-	// landingPage.setLogo(landingPageDto.getLogo());
-	// landingPage.setGallery(landingPageDto.getGallery());
-	// landingPage.setUrl(landingPageDto.getUrl());
-	// landingPage.setSlug(landingPageDto.getSlug());
-
-	// LandingPage updatedLandingPage = repository.saveAndFlush(landingPage);
-	// return new ResponseEntity<>(
-	// new ResponseObject("Landing page actualizada exitosamente",
-	// updatedLandingPage, TypeResponse.SUCCESS),
-	// HttpStatus.OK
-	// );
-	// }
 
 	@Transactional
 	public ResponseEntity<ResponseObject> deleteById(UUID id) {
@@ -197,5 +151,68 @@ public class LandingPageService {
 		return new ResponseEntity<>(
 				new ResponseObject("Landing page eliminada exitosamente", null, TypeResponse.SUCCESS),
 				HttpStatus.OK);
+	}
+	@Transactional(rollbackFor = { SQLException.class, IOException.class })
+	public ResponseEntity<ResponseObject> updateLanding(UpdateLandingPageDto landing) {
+		Optional<LandingPage> existingLanding = landingRepository.findById(UUID.fromString(landing.getId()));
+		if (existingLanding.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Landing page no encontrada", null, TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND);
+		}
+
+		Optional<Event> eventData = eventRepository.findByName(landing.getEventName());
+		if (eventData.isEmpty()) {
+			return new ResponseEntity<>(
+					new ResponseObject("Evento no encontrado", null, TypeResponse.ERROR),
+					HttpStatus.NOT_FOUND);
+		}
+
+		LandingPage landingPage = existingLanding.get();
+
+		try {
+			if (landing.getLogo() != null && !landing.getLogo().isEmpty()) {
+				String newLogoUrl = cloudinaryUpload.UploadImage(landing.getLogo());
+				landingPage.setLogo(newLogoUrl);
+			}
+
+			Map<String, String> gallery = landingPage.getGalleryJson();
+			if (gallery == null) {
+				gallery = new HashMap<>();
+			}
+
+			if (landing.getGallery1() != null && !landing.getGallery1().isEmpty()) {
+				String gallery1Url = cloudinaryUpload.UploadImage(landing.getGallery1());
+				gallery.put("gallery1", gallery1Url);
+			}
+
+			if (landing.getGallery2() != null && !landing.getGallery2().isEmpty()) {
+				String gallery2Url = cloudinaryUpload.UploadImage(landing.getGallery2());
+				gallery.put("gallery2", gallery2Url);
+			}
+
+			if (landing.getGallery3() != null && !landing.getGallery3().isEmpty()) {
+				String gallery3Url = cloudinaryUpload.UploadImage(landing.getGallery3());
+				gallery.put("gallery3", gallery3Url);
+			}
+
+			landingPage.setGalleryJson(gallery);
+
+			String newSlug = eventData.get().getName().replace(" ", "-");
+			landingPage.setSlug(newSlug);
+			landingPage.setEvent(eventData.get());
+
+			LandingPage updatedLandingPage = landingRepository.save(landingPage);
+
+			return new ResponseEntity<>(
+					new ResponseObject("Landing page actualizada exitosamente", updatedLandingPage, TypeResponse.SUCCESS),
+					HttpStatus.OK);
+
+		} catch (IOException e) {
+			log.error("Error al subir imágenes a Cloudinary: {}", e.getMessage());
+			return new ResponseEntity<>(
+					new ResponseObject("Error al subir las imágenes", null, TypeResponse.ERROR),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
