@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.event.service;
 
+import mx.edu.utez.backendevent.event.model.dtos.UpdateEventDto;
 import mx.edu.utez.backendevent.util.CloudinaryUpload;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
@@ -136,14 +137,45 @@ public class EventService {
 				HttpStatus.CREATED);
 	}
 
-	@Transactional(rollbackFor = { SQLException.class })
-	public ResponseEntity<ResponseObject> update(EventDto eventDto) {
+//	@Transactional(rollbackFor = { SQLException.class })
+//	public ResponseEntity<ResponseObject> update(EventDto eventDto) {
+//		Optional<Event> optionalEvent = eventrepository.findById(eventDto.getId());
+//		if (optionalEvent.isEmpty()) {
+//			return new ResponseEntity<>(
+//					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
+//					HttpStatus.NOT_FOUND);
+//		}
+//
+//		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
+//			return new ResponseEntity<>(
+//					new ResponseObject("La fecha de fin no puede ser anterior a la fecha de inicio", null,
+//							TypeResponse.ERROR),
+//					HttpStatus.BAD_REQUEST);
+//		}
+//
+//		Event event = optionalEvent.get();
+//		event.setName(eventDto.getName());
+//		event.setDescription(eventDto.getDescription());
+//		event.setStartDate(eventDto.getStartDate());
+//		event.setEndDate(eventDto.getEndDate());
+//
+//		Event updatedEvent = eventrepository.saveAndFlush(event);
+//		return new ResponseEntity<>(
+//				new ResponseObject("Evento actualizado exitosamente", updatedEvent, TypeResponse.SUCCESS),
+//				HttpStatus.OK);
+//	}
+
+
+	@Transactional
+	public ResponseEntity<ResponseObject> update(UpdateEventDto eventDto) {
 		Optional<Event> optionalEvent = eventrepository.findById(eventDto.getId());
 		if (optionalEvent.isEmpty()) {
 			return new ResponseEntity<>(
 					new ResponseObject("Evento no encontrado", null, TypeResponse.WARN),
 					HttpStatus.NOT_FOUND);
 		}
+
+		Event existingEvent = optionalEvent.get();
 
 		if (eventDto.getEndDate().before(eventDto.getStartDate())) {
 			return new ResponseEntity<>(
@@ -152,15 +184,27 @@ public class EventService {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		Event event = optionalEvent.get();
-		event.setName(eventDto.getName());
-		event.setDescription(eventDto.getDescription());
-		event.setStartDate(eventDto.getStartDate());
-		event.setEndDate(eventDto.getEndDate());
+		existingEvent.setName(eventDto.getName());
+		existingEvent.setDescription(eventDto.getDescription());
+		existingEvent.setStartDate(eventDto.getStartDate());
+		existingEvent.setEndDate(eventDto.getEndDate());
 
-		Event updatedEvent = eventrepository.saveAndFlush(event);
+		if (eventDto.getFrontPage() != null && !eventDto.getFrontPage().isEmpty()) {
+			try {
+				String newImageUrl = cloudinaryUpload.UploadImage(eventDto.getFrontPage());
+
+				existingEvent.setFrontPage(newImageUrl);
+
+			} catch (IOException e) {
+				return new ResponseEntity<>(
+						new ResponseObject("Error al actualizar la imagen", null, TypeResponse.ERROR),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		Event updatedEvent = eventrepository.saveAndFlush(existingEvent);
 		return new ResponseEntity<>(
-				new ResponseObject("Evento actualizado exitosamente", updatedEvent, TypeResponse.SUCCESS),
+				new ResponseObject("Evento actualizado correctamente", updatedEvent, TypeResponse.SUCCESS),
 				HttpStatus.OK);
 	}
 

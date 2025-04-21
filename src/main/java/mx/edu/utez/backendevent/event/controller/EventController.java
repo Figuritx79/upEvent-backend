@@ -2,6 +2,7 @@ package mx.edu.utez.backendevent.event.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
+import mx.edu.utez.backendevent.event.model.dtos.UpdateEventDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
 import mx.edu.utez.backendevent.util.TypeResponse;
 import mx.edu.utez.backendevent.event.model.EventDto;
@@ -74,11 +75,20 @@ public class EventController {
 		return service.save(eventDto);
 	}
 
-	@PutMapping("/events-update")
-	public ResponseEntity<ResponseObject> updateEvent(@Valid @RequestBody EventDto eventDto) {
+	@PutMapping(value = "/events-update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseObject> updateEvent(
+			@RequestPart("eventDto") String eventDtoStr,
+			@RequestPart(value = "frontPage", required = false) MultipartFile frontPage) throws JsonProcessingException {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		UpdateEventDto eventDto = objectMapper.readValue(eventDtoStr, UpdateEventDto.class);
+
+		if (frontPage != null && !frontPage.isEmpty()) {
+			eventDto.setFrontPage(frontPage);
+		}
+
 		return service.update(eventDto);
 	}
-
 	@DeleteMapping("/events-delete/{id}")
 	public ResponseEntity<ResponseObject> deleteEvent(@PathVariable UUID id) {
 		return service.deleteById(id);
