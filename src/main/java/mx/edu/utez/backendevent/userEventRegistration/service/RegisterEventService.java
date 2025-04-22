@@ -141,13 +141,18 @@ public class RegisterEventService {
 					new ResponseObject("Error en el registro al evento", TypeResponse.ERROR),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		var qrString = qrGenerator.generateQrBase64(eventExist.get().getId());
+
+		//Generar y mandar QR
+		String qrData = String.format("{\"email\": \"%s\", \"idEvent\": \"%s\", \"event\": \"%s\"}",
+				searchNewUser.get().getEmail(), eventExist.get().getId(), eventExist.get().getName());
+
+		String qrBase64 = qrGenerator.generateQrBase64(qrData);
+
 		var customHtml = template.replace("{user}", searchNewUser.get().getName())
 				.replace("{event}", eventExist.get().getName())
 				.replace("{date}", eventExist.get().getStartDate().toString())
-				.replace("{hour}", "16 horas")
-				.replace("{url}", "data:image/png;base64," + qrString);
-		sender.SendMail(searchNewUser.get().getEmail(), "¡Inscripción confirmada !", customHtml);
+				.replace("{hour}", "16 horas");
+		emailQR.SendMail(searchNewUser.get().getEmail(), "¡Inscripción confirmada !", customHtml, qrBase64, "codigo_qr.png" );
 		return new ResponseEntity<>(
 				new ResponseObject("Se hizo el registro al evento", TypeResponse.SUCCESS),
 				HttpStatus.CREATED);
