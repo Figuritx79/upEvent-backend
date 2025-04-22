@@ -1,6 +1,8 @@
 package mx.edu.utez.backendevent.workshop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
+import mx.edu.utez.backendevent.event.model.dtos.UpdateEventDto;
 import mx.edu.utez.backendevent.landingPage.model.dtos.CreateLandingPageDto;
 import mx.edu.utez.backendevent.userEventRegistration.model.dto.EmailDto;
 import mx.edu.utez.backendevent.util.ResponseObject;
@@ -80,19 +82,17 @@ public class WorkshopController {
 	@PutMapping(value = "/workshop/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseObject> updateWorkshop(
 			@RequestPart("workshop") String workshopJson,
-			@RequestPart(value = "workshopImage", required = false) MultipartFile workshopImage) {
+			@RequestPart(value = "workshopImage", required = false) MultipartFile workshopImage) throws JsonProcessingException {
 
-		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			var workshopDto = objectMapper.readValue(workshopJson, UpdateWorkShopDto.class);
-			workshopDto.setWorkshopImage(workshopImage);
+			UpdateWorkShopDto workshopDto = objectMapper.readValue(workshopJson, UpdateWorkShopDto.class);
+
+			if (workshopImage != null && !workshopImage.isEmpty()) {
+				workshopDto.setWorkshopImage(workshopImage);
+			}
+
 			return service.updateWorkshop(workshopDto);
-		} catch (Exception e) {
-			return new ResponseEntity<>(
-					new ResponseObject("Error al procesar la solicitud", TypeResponse.ERROR),
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+
 	}
 
 }

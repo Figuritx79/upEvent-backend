@@ -136,27 +136,28 @@ public class WorkshopService {
 
 		var workshop = workshopOptional.get();
 
-		try {
-			if (dto.getWorkshopImage() != null && !dto.getWorkshopImage().isEmpty()) {
-				String newWorkshopImage = cloudinaryUpload.UploadImage(dto.getWorkshopImage());
-				workshop.setImage(newWorkshopImage);
-			}
-		} catch (IOException e) {
-			return new ResponseEntity<>(
-					new ResponseObject("Error al subir la imagen", null, TypeResponse.ERROR),
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
-
 		workshop.setName(dto.getName());
 		workshop.setCapacity(dto.getCapacity());
 		workshop.setDescription(dto.getDescription());
 		workshop.setHour(dto.getHour());
 		workshop.getSpeakerInfo().put("speaker_name", dto.getSpeakerName());
 
-		repository.saveAndFlush(workshop);
+		if (dto.getWorkshopImage() != null && !dto.getWorkshopImage().isEmpty()) {
+			try {
+				String newImageUrl = cloudinaryUpload.UploadImage(dto.getWorkshopImage());
+
+				workshop.setImage(newImageUrl);
+
+			} catch (IOException e) {
+				return new ResponseEntity<>(
+						new ResponseObject("Error al actualizar la imagen", null, TypeResponse.ERROR),
+						HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		Workshop work = repository.saveAndFlush(workshop);
 		return new ResponseEntity<>(
-				new ResponseObject("Taller actualizado", workshop, TypeResponse.SUCCESS),
+				new ResponseObject("Taller actualizado", work, TypeResponse.SUCCESS),
 				HttpStatus.OK
 		);
 	}
