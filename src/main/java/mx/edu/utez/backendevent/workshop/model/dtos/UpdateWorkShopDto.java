@@ -1,5 +1,6 @@
 package mx.edu.utez.backendevent.workshop.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateWorkShopDto {
 
 	@NotNull(groups = { Update.class }, message = "El ID del taller es obligatorio")
